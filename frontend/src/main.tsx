@@ -11,13 +11,14 @@ type Business = {
   business_type?: string; established_year?: number | null;
   location: { latitude: number; longitude: number }; address: Record<string, string>;
   contact: { phone?: string | null; website?: string | null; email?: string | null };
+  source?: string;
   legal?: { status?: string; entity_name?: string; entity_type?: string; checked_at?: string; evidence?: { url?: string; observed_at?: string }[] };
   active?: boolean; activity?: { last_event_at?: string; last_event_type?: string; score?: number };
   metadata: { osm_type?: string; osm_id?: number; last_seen_at?: string; osm_tags?: Record<string, string> };
 };
-type ActivityEvent = { type: string; detected_at: string; description: string; details?: Record<string, unknown> };
+type ActivityEvent = { business_id?: string; type: string; detected_at: string; description: string; details?: Record<string, unknown> };
 
-const API = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:8000/api");
+const DATA_BASE = `${import.meta.env.BASE_URL}data`;
 const categoryNames: Record<string, { id: string; en: string }> = {
   all: { id: "Semua kategori", en: "All categories" },
   food_and_services: { id: "Makanan dan layanan", en: "Food and services" },
@@ -59,10 +60,20 @@ function App() {
   const mapNode = useRef<HTMLDivElement>(null);
   const map = useRef<Map | null>(null);
   const markers = useRef<Marker[]>([]);
+  const activityData = useRef<ActivityEvent[]>([]);
   const t = copy[language];
 
-  useEffect(() => { fetch(`${API}/businesses`).then((response) => response.json()).then((data) => setBusinesses(data.businesses)).catch(() => setError(language === "id" ? "Tidak dapat terhubung ke API." : "Could not connect to the API.")); }, [language]);
-  useEffect(() => { fetch(`${API}/categories`).then((response) => response.json()).then((data) => setCategoryOptions(data.categories)).catch(() => undefined); }, []);
+  useEffect(() => {
+    Promise.all([fetch(`${DATA_BASE}/businesses.json`), fetch(`${DATA_BASE}/activities.json`)]).then(async ([businessResponse, activityResponse]) => {
+      const [businessData, activityData] = await Promise.all([businessResponse.json(), activityResponse.json()]);
+      const overrides = JSON.parse(localStorage.getItem("sbi-category-overrides") || "{}");
+      setBusinesses(businessData.map((business: Business) => overrides[business.id] ? { ...business, category: overrides[business.id] } : business));
+      activityData.current = activityData;
+      setActivityEvents([]);
+      const custom = JSON.parse(localStorage.getItem("sbi-custom-categories") || "[]");
+      setCategoryOptions(custom);
+    }).catch(() => setError(language === "id" ? "Dataset statis tidak dapat dimuat." : "Could not load the static dataset."));
+  }, [language]);
   useEffect(() => { localStorage.setItem("sbi-language", language); }, [language]);
   useEffect(() => { localStorage.setItem("sbi-theme", darkMode ? "dark" : "light"); }, [darkMode]);
 
@@ -84,6 +95,7 @@ function App() {
   const pageSize = 50;
   const pageCount = Math.max(1, Math.ceil(databaseRows.length / pageSize));
   const pageRows = databaseRows.slice(databasePage * pageSize, (databasePage + 1) * pageSize);
+  const selectedActivityEvents = useMemo(() => activityEvents.filter((event) => event.business_id === selected?.id), [activityEvents, selected]);
 
   useEffect(() => { setDatabasePage(0); }, [databaseQuery, databaseCategory, databaseTab]);
   useEffect(() => { setPlacesPage(0); }, [category, businessType, establishedYear, activityDays]);
@@ -106,53 +118,37 @@ function App() {
   }, [filtered]);
 
   const displayCategory = (value: string) => categoryOptions.find((item) => item.id === value)?.name || categoryLabel(value, language);
-  const selectBusiness = async (business: Business) => { setSelected(business); setActivityEvents([]); setDatabaseOpen(false); map.current?.flyTo({ center: [business.location.longitude, business.location.latitude], zoom: 16 }); try { const response = await fetch(`${API}/businesses/${encodeURIComponent(business.id)}/activities`); setActivityEvents((await response.json()).activities || []); } catch { setActivityEvents([]); } };
+  const selectBusiness = (business: Business) => { setSelected(business); setActivityEvents(activityData.current.filter((event) => event.business_id === business.id)); setDatabaseOpen(false); map.current?.flyTo({ center: [business.location.longitude, business.location.latitude], zoom: 16 }); };
   const addCategory = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newCategory.trim()) return;
-    const response = await fetch(`${API}/categories`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newCategory.trim() }) });
-    if (response.ok) { const created = await response.json(); setCategoryOptions((current) => [...current, created]); setNewCategory(""); setCategoryStatus(created.name); }
-    else setCategoryStatus(language === "id" ? "Kategori sudah ada atau tidak valid." : "Category already exists or is invalid.");
+    const id = newCategory.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "") || "new_category";
+    if (categoryOptions.some((item) => item.id === id) || categories.includes(id)) { setCategoryStatus(language === "id" ? "Kategori sudah ada atau tidak valid." : "Category already exists or is invalid."); return; }
+    const created = { id, name: newCategory.trim() };
+    const updated = [...categoryOptions, created];
+    setCategoryOptions(updated); localStorage.setItem("sbi-custom-categories", JSON.stringify(updated)); setNewCategory(""); setCategoryStatus(created.name);
   };
-  const updateBusinessCategory = async (businessId: string, value: string) => {
-    const response = await fetch(`${API}/businesses/${encodeURIComponent(businessId)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ category: value }) });
-    if (!response.ok) { setCategoryStatus(t.updateFailed); return; }
-    const updated = await response.json();
-    setBusinesses((current) => current.map((business) => business.id === updated.id ? updated : business));
-    setCategoryStatus(language === "id" ? "Record diperbarui." : "Record updated.");
+  const updateBusinessCategory = (businessId: string, value: string) => {
+    setBusinesses((current) => current.map((business) => business.id === businessId ? { ...business, category: value } : business));
+    setCategoryStatus(language === "id" ? "Record diperbarui di browser." : "Record updated in this browser.");
+    const overrides = JSON.parse(localStorage.getItem("sbi-category-overrides") || "{}");
+    overrides[businessId] = value; localStorage.setItem("sbi-category-overrides", JSON.stringify(overrides));
   };
   const exportHref = (format: "csv" | "xlsx") => {
-    const params = new URLSearchParams();
-    if (databaseCategory !== "all") params.set("category", databaseCategory);
-    if (databaseQuery.trim()) params.set("q", databaseQuery.trim());
-    return `${API}/export.${format}?${params.toString()}`;
+    const rows = databaseRows.map((business) => [business.id, business.name, business.category, business.business_type || business.subcategory, business.established_year || "", business.location.latitude, business.location.longitude, business.contact.phone || "", business.contact.website || "", business.source || "openstreetmap"]);
+    const headers = ["ID", "Name", "Category", "Business Type", "Established Year", "Latitude", "Longitude", "Phone", "Website", "Source"];
+    if (format === "csv") {
+      const csv = [headers, ...rows].map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\n");
+      return `data:text/csv;charset=utf-8,%EF%BB%BF${encodeURIComponent(csv)}`;
+    }
+    const xmlRows = [headers, ...rows].map((row) => `<Row>${row.map((value) => `<Cell><Data ss:Type="String">${String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</Data></Cell>`).join("")}</Row>`).join("");
+    return `data:application/vnd.ms-excel;charset=utf-8,${encodeURIComponent(`<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Businesses"><Table>${xmlRows}</Table></Worksheet></Workbook>`)}`;
   };
   const refreshOsm = async () => {
     if (refreshing) return;
     setRefreshing(true);
-    setRefreshMessage(t.refreshQueued);
-    try {
-      const start = await fetch(`${API}/refresh`, { method: "POST" });
-      if (!start.ok) throw new Error("Refresh request failed");
-      for (let attempt = 0; attempt < 180; attempt += 1) {
-        await new Promise((resolve) => window.setTimeout(resolve, 1000));
-        const status = await (await fetch(`${API}/refresh/status`)).json();
-        setRefreshMessage(status.status === "running" ? t.refreshRunning : t.refreshQueued);
-        if (status.status === "completed") {
-          const [businessResponse, categoryResponse] = await Promise.all([fetch(`${API}/businesses`), fetch(`${API}/categories`)]);
-          setBusinesses((await businessResponse.json()).businesses);
-          setCategoryOptions((await categoryResponse.json()).categories);
-          setRefreshMessage(`${t.refreshCompleted}: ${status.normalized_business_count}`);
-          setRefreshing(false);
-          return;
-        }
-        if (status.status === "failed") throw new Error(status.error || "Refresh failed");
-      }
-      throw new Error("Refresh timed out");
-    } catch {
-      setRefreshMessage(t.refreshFailed);
-      setRefreshing(false);
-    }
+    setRefreshMessage(language === "id" ? "Mode statis: crawl lokal lalu deploy ulang." : "Static mode: crawl locally, then redeploy.");
+    window.setTimeout(() => { setRefreshing(false); setRefreshMessage(""); }, 3500);
   };
 
   return <div className={`app-shell ${darkMode ? "theme-dark" : ""}`}>

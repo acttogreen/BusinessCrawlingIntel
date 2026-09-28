@@ -1,0 +1,19 @@
+{
+  "source": "openstreetmap",
+  "scope": "Surakarta",
+  "collected_at": "2026-09-28T10:12:14.122404+00:00",
+  "raw_object_count": 2004,
+  "normalized_business_count": 2004,
+  "custom_categories": [
+    {
+      "id": "umkm_lokal",
+      "name": "UMKM Lokal"
+    },
+    {
+      "id": "warung",
+      "name": "Warung"
+    }
+  ],
+  "activity_event_count": 2004,
+  "last_activity_event_count": 0
+}
