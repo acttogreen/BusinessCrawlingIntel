@@ -37,6 +37,7 @@ const categoryLabel = (value: string, language: Language) => categoryNames[value
 
 function App() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [category, setCategory] = useState("all");
   const [businessType, setBusinessType] = useState("all");
   const [establishedYear, setEstablishedYear] = useState("all");
@@ -62,6 +63,17 @@ function App() {
   const markers = useRef<Marker[]>([]);
   const activityData = useRef<ActivityEvent[]>([]);
   const t: Record<string, string> = { all: language === "id" ? "Semua" : "All", unknownYear: language === "id" ? "Tahun tidak diketahui" : "Unknown year", ...copy[language] };
+
+  useEffect(() => {
+    const updateDeviceMode = () => {
+      const mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      setIsMobileDevice(mobileUserAgent || window.matchMedia("(max-width: 760px)").matches);
+    };
+    updateDeviceMode();
+    window.addEventListener("resize", updateDeviceMode);
+    window.addEventListener("orientationchange", updateDeviceMode);
+    return () => { window.removeEventListener("resize", updateDeviceMode); window.removeEventListener("orientationchange", updateDeviceMode); };
+  }, []);
 
   useEffect(() => {
     Promise.all([fetch(`${DATA_BASE}/businesses.json`), fetch(`${DATA_BASE}/activities.json`)]).then(async ([businessResponse, activityResponse]) => {
@@ -152,7 +164,7 @@ function App() {
     window.setTimeout(() => { setRefreshing(false); setRefreshMessage(""); }, 3500);
   };
 
-  return <div className={`app-shell ${darkMode ? "theme-dark" : ""}`}>
+  return <div className={`app-shell ${darkMode ? "theme-dark" : ""} ${isMobileDevice ? "device-mobile" : ""}`}>
     <header className="topbar"><div><p className="eyebrow">KOTA SURAKARTA</p><h1>{t.title}</h1></div><nav className="top-actions" aria-label="Dashboard controls"><button className="refresh-button" onClick={refreshOsm} disabled={refreshing}>↻ <span>{refreshing ? refreshMessage : t.refresh}</span></button><button className="database-button" onClick={() => setDatabaseOpen(true)}>▦ <span>{t.database}</span></button><button className="language-toggle" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={`${t.language}: ${language.toUpperCase()}`}>{language === "id" ? "ID" : "EN"}</button><button className="theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={`${t.theme}: ${darkMode ? t.dark : t.light}`}>{darkMode ? "☀" : "☾"}</button><div className="source-badge"><span className="status-dot" /> {t.source}</div></nav></header>
     <main className="dashboard">
       <aside className="sidebar">
