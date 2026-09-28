@@ -17,7 +17,7 @@ type Business = {
 };
 type ActivityEvent = { type: string; detected_at: string; description: string; details?: Record<string, unknown> };
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:8000/api");
 const categoryNames: Record<string, { id: string; en: string }> = {
   all: { id: "Semua kategori", en: "All categories" },
   food_and_services: { id: "Makanan dan layanan", en: "Food and services" },

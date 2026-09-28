@@ -1,0 +1,11 @@
+.git
+.gitignore
+frontend/node_modules
+frontend/dist
+frontend/*.log
+frontend/tsconfig.tsbuildinfo
+backend/vendor
+backend/__pycache__
+backend/*.log
+tests
+*.pyc

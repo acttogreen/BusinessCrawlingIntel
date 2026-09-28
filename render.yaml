@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: surakarta-business-intelligence
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
