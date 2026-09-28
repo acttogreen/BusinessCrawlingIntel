@@ -36,18 +36,24 @@ app.add_middleware(
 
 
 @app.get("/api/businesses")
-def businesses(category: str | None = Query(default=None), district: str | None = Query(default=None), business_type: str | None = Query(default=None), established_year: str | None = Query(default=None), activity_days: int | None = Query(default=None, ge=1), activity_type: str | None = Query(default=None)) -> dict[str, Any]:
-    records = filter_businesses(read_businesses(), category, district, business_type, established_year, activity_days=activity_days, activity_type=activity_type)
+def businesses(category: str | None = Query(default=None), district: str | None = Query(default=None), business_type: str | None = Query(default=None), established_year: str | None = Query(default=None), investment_type: str | None = Query(default=None), legal_entity: str | None = Query(default=None), mapping_status: str | None = Query(default=None), activity_days: int | None = Query(default=None, ge=1), activity_type: str | None = Query(default=None)) -> dict[str, Any]:
+    records = filter_businesses(read_businesses(), category, district, business_type, established_year, investment_type, legal_entity, mapping_status, activity_days=activity_days, activity_type=activity_type)
     return {"businesses": records, "total": len(records)}
 
 
-def filter_businesses(records: list[dict[str, Any]], category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, query: str | None = None, activity_days: int | None = None, activity_type: str | None = None) -> list[dict[str, Any]]:
+def filter_businesses(records: list[dict[str, Any]], category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, investment_type: str | None = None, legal_entity: str | None = None, mapping_status: str | None = None, query: str | None = None, activity_days: int | None = None, activity_type: str | None = None) -> list[dict[str, Any]]:
     if category and category != "all":
         records = [record for record in records if record.get("category") == category]
     if district:
         records = [record for record in records if record.get("address", {}).get("addr:suburb") == district]
     if business_type and business_type != "all":
         records = [record for record in records if record.get("business_type", record.get("subcategory")) == business_type]
+    if investment_type and investment_type != "all":
+        records = [record for record in records if record.get("investment", {}).get("type") == investment_type]
+    if legal_entity and legal_entity != "all":
+        records = [record for record in records if record.get("legal", {}).get("entity_type") == legal_entity]
+    if mapping_status and mapping_status != "all":
+        records = [record for record in records if record.get("mapping", {}).get("status") == mapping_status]
     if established_year is not None:
         if established_year == "unknown":
             records = [record for record in records if not record.get("established_year")]
@@ -76,8 +82,8 @@ def _activity_datetime(record: dict[str, Any]) -> datetime | None:
         return None
 
 
-EXPORT_COLUMNS = ["id", "name", "category", "business_type", "established_year", "latitude", "longitude", "address", "phone", "website", "source", "osm_type", "osm_id"]
-EXPORT_HEADERS = ["ID", "Name", "Category", "Business Type", "Established Year", "Latitude", "Longitude", "Address", "Phone", "Website", "Source", "OSM Type", "OSM ID"]
+EXPORT_COLUMNS = ["id", "name", "category", "business_type", "legal_entity", "investment_type", "mapping_status", "latitude", "longitude", "address", "source", "osm_type", "osm_id"]
+EXPORT_HEADERS = ["ID", "Name", "Sector", "Business Type", "Legal Entity", "Investment Type", "OSM Mapping", "Latitude", "Longitude", "Address", "Source", "OSM Type", "OSM ID"]
 
 
 def export_rows(records: list[dict[str, Any]]) -> list[list[Any]]:
@@ -86,25 +92,27 @@ def export_rows(records: list[dict[str, Any]]) -> list[list[Any]]:
         address = record.get("address", {})
         contact = record.get("contact", {})
         metadata = record.get("metadata", {})
+        osm = metadata.get("osm", {})
         rows.append([
             record.get("id", ""), record.get("name", ""), record.get("category", ""), record.get("business_type", record.get("subcategory", "")),
-            record.get("established_year") or "", record.get("location", {}).get("latitude", ""), record.get("location", {}).get("longitude", ""),
+            record.get("legal", {}).get("entity_type", ""), record.get("investment", {}).get("type", ""), record.get("mapping", {}).get("status", ""),
+            record.get("location", {}).get("latitude") or "", record.get("location", {}).get("longitude") or "",
             " ".join(str(address[key]) for key in ("addr:housenumber", "addr:street", "addr:suburb", "addr:city", "addr:postcode") if address.get(key)),
-            contact.get("phone") or "", contact.get("website") or "", record.get("source", ""), metadata.get("osm_type", ""), metadata.get("osm_id", ""),
+            record.get("source", ""), osm.get("osm_type", metadata.get("osm_type", "")), osm.get("osm_id", metadata.get("osm_id", "")),
         ])
     return rows
 
 
-def export_filter_params(category: str | None, district: str | None, business_type: str | None, established_year: str | None, query: str | None) -> list[dict[str, Any]]:
-    return export_rows(filter_businesses(read_businesses(), category, district, business_type, established_year, query))
+def export_filter_params(category: str | None, district: str | None, business_type: str | None, established_year: str | None, query: str | None, investment_type: str | None = None, legal_entity: str | None = None) -> list[dict[str, Any]]:
+    return export_rows(filter_businesses(read_businesses(), category, district, business_type, established_year, investment_type, legal_entity, query=query))
 
 
 @app.get("/api/export.csv")
-def export_csv(category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, q: str | None = None) -> Response:
+def export_csv(category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, investment_type: str | None = None, legal_entity: str | None = None, q: str | None = None) -> Response:
     output = io.StringIO(newline="")
     writer = csv.writer(output)
     writer.writerow(EXPORT_HEADERS)
-    writer.writerows(export_filter_params(category, district, business_type, established_year, q))
+    writer.writerows(export_filter_params(category, district, business_type, established_year, q, investment_type, legal_entity))
     return Response(content="\ufeff" + output.getvalue(), media_type="text/csv; charset=utf-8", headers={"Content-Disposition": "attachment; filename=surakarta-businesses.csv"})
 
 
@@ -149,8 +157,8 @@ def build_xlsx(rows: list[list[Any]]) -> bytes:
 
 
 @app.get("/api/export.xlsx")
-def export_xlsx(category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, q: str | None = None) -> Response:
-    content = build_xlsx(export_filter_params(category, district, business_type, established_year, q))
+def export_xlsx(category: str | None = None, district: str | None = None, business_type: str | None = None, established_year: str | None = None, investment_type: str | None = None, legal_entity: str | None = None, q: str | None = None) -> Response:
+    content = build_xlsx(export_filter_params(category, district, business_type, established_year, q, investment_type, legal_entity))
     return Response(content=content, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=surakarta-businesses.xlsx"})
 
 

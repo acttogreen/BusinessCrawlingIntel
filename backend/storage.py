@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from backend.mapping import mapped_businesses
+
 
 DATA_DIR = Path(__file__).parent / "data"
 BUSINESSES_PATH = DATA_DIR / "businesses.json"
@@ -21,6 +23,9 @@ def _write(path: Path, value: Any) -> None:
 
 
 def read_businesses() -> list[dict[str, Any]]:
+    from backend.mapping import MAPPING_PATH
+    if MAPPING_PATH.exists():
+        return mapped_businesses()
     records = _read(BUSINESSES_PATH, [])
     for record in records:
         tags = record.get("metadata", {}).get("osm_tags", {})
