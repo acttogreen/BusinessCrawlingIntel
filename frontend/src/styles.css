@@ -97,6 +97,30 @@
 .theme-dark .changelog-modal { background: #202c35; color: #e6edf0; border-color: #52616a; }
 .theme-dark .changelog-modal ul, .theme-dark .changelog-date, .theme-dark .credits { color: #aab8bd; }
 .theme-dark .credits { border-color: #3a4851; }
+.analytics-modal { width: min(1080px, 100%); max-height: min(820px, calc(100vh - 56px)); overflow: auto; background: #fffdf9; color: #23313f; border: 1px solid #d8d3c8; box-shadow: 0 20px 60px #17212955; }
+.theme-dark .analytics-modal { background: #202c35; color: #e6edf0; border-color: #52616a; }
+.analytics-content { padding: 22px 26px 28px; }
+.analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.analytics-chart { min-width: 0; }
+.analytics-chart h3 { margin: 0 0 14px; font-size: 13px; color: #34454d; }
+.theme-dark .analytics-chart h3 { color: #edf3f4; }
+.bar-chart { display: grid; gap: 9px; }
+.bar-row { display: grid; grid-template-columns: minmax(90px, 1fr) minmax(100px, 2fr) 32px; gap: 8px; align-items: center; font-size: 11px; }
+.bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #68757a; }
+.theme-dark .bar-label { color: #aab8bd; }
+.bar-track { height: 9px; background: #eeeae2; overflow: hidden; }
+.theme-dark .bar-track { background: #34434c; }
+.bar-fill { display: block; height: 100%; background: #e76f51; }
+.bar-row strong { color: #34454d; text-align: right; font-variant-numeric: tabular-nums; }
+.theme-dark .bar-row strong { color: #edf3f4; }
+.pie-chart-panel { display: grid; grid-template-columns: 150px 1fr; column-gap: 22px; align-items: center; }
+.pie-chart-panel h3 { grid-column: 1 / -1; }
+.pie-chart { width: 150px; aspect-ratio: 1; border-radius: 50%; }
+.pie-legend { display: grid; gap: 7px; font-size: 11px; color: #68757a; }
+.pie-legend span { display: flex; align-items: center; gap: 7px; }
+.pie-legend i { width: 9px; height: 9px; flex: 0 0 auto; display: inline-block; }
+.theme-dark .pie-legend { color: #aab8bd; }
+@media (max-width: 760px) { .analytics-grid { grid-template-columns: 1fr; } .analytics-content { padding: 18px 16px 22px; } .analytics-modal { max-height: calc(100vh - 20px); } }
 .modal-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 26px; border-top: 1px solid #dedbd3; color: #7d888c; font-size: 11px; }
 .theme-dark .modal-footer { border-color: #3a4851; }
 .modal-footer button { padding: 7px 10px; border: 1px solid #d6d3cb; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }
