@@ -61,7 +61,7 @@ function App() {
   const map = useRef<Map | null>(null);
   const markers = useRef<Marker[]>([]);
   const activityData = useRef<ActivityEvent[]>([]);
-  const t = copy[language];
+  const t: Record<string, string> = { all: language === "id" ? "Semua" : "All", unknownYear: language === "id" ? "Tahun tidak diketahui" : "Unknown year", ...copy[language] };
 
   useEffect(() => {
     Promise.all([fetch(`${DATA_BASE}/businesses.json`), fetch(`${DATA_BASE}/activities.json`)]).then(async ([businessResponse, activityResponse]) => {
@@ -71,7 +71,8 @@ function App() {
       activityData.current = activityData;
       setActivityEvents([]);
       const custom = JSON.parse(localStorage.getItem("sbi-custom-categories") || "[]");
-      setCategoryOptions(custom);
+      const builtIn = Object.entries(categoryNames).filter(([id]) => id !== "all").map(([id, names]) => ({ id, name: names[language] }));
+      setCategoryOptions([...builtIn, ...custom.filter((item: { id: string }) => !builtIn.some((option) => option.id === item.id))]);
     }).catch(() => setError(language === "id" ? "Dataset statis tidak dapat dimuat." : "Could not load the static dataset."));
   }, [language]);
   useEffect(() => { localStorage.setItem("sbi-language", language); }, [language]);
