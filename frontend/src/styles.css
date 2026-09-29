@@ -161,13 +161,14 @@
   .topbar h1 { font-size: 18px; }
   .top-actions { flex-wrap: wrap; justify-content: flex-end; }
   .dashboard { width: 100%; min-height: 0; }
-  .map-stage { width: 100%; height: min(58vh, 520px); min-height: 360px; }
+  .map-stage { width: 100%; height: min(55vh, 520px); height: clamp(320px, 55dvh, 520px); min-height: 0; }
   .sidebar { width: 100%; overflow: visible; }
   .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary > div { min-width: 0; padding: 17px 16px; }
   .summary strong { font-size: 23px; }
   .filters, .business-list { padding-left: 16px; padding-right: 16px; }
-  .business-row strong { max-width: calc(100vw - 86px); }
+  .business-list { max-height: none; }
+  .business-row > span:last-child { min-width: 0; }
   .places-pagination { align-items: stretch; flex-wrap: wrap; row-gap: 10px; }
   .places-pagination > span { flex-basis: 100%; }
   .places-pagination > div { margin-left: auto; }
@@ -176,24 +177,72 @@
   .topbar { padding: 10px 12px; align-items: flex-start; }
   .top-actions { gap: 4px; }
   .language-toggle, .theme-toggle { width: 34px; }
-  .map-stage { height: 52vh; min-height: 330px; }
+  .map-stage { height: min(48vh, 420px); height: clamp(300px, 48dvh, 420px); }
   .places-pagination > div { width: 100%; justify-content: space-between; }
   .places-pagination button { flex: 1 1 0; }
   .places-pagination .page-number { flex: 0 0 50px; }
 }
-.device-mobile .topbar { min-height: 64px; height: auto; gap: 12px; align-items: center; padding: 10px 16px; }
-.device-mobile .topbar h1 { font-size: 18px; }
-.device-mobile .top-actions { flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
-.device-mobile .source-badge { display: none; }
-.device-mobile .dashboard { display: flex; flex-direction: column; width: 100%; height: auto; min-height: 0; }
-.device-mobile .map-stage { order: 1; width: 100%; height: 55vh; min-height: 360px; }
-.device-mobile .sidebar { order: 2; width: 100%; overflow: visible; border-right: 0; }
-.device-mobile .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.device-mobile .summary > div, .device-mobile .filters, .device-mobile .business-list { padding-left: 16px; padding-right: 16px; }
-.device-mobile .business-row strong { max-width: calc(100vw - 86px); }
-.device-mobile .places-pagination { align-items: stretch; flex-wrap: wrap; row-gap: 10px; }
-.device-mobile .places-pagination > span { flex-basis: 100%; }
-.device-mobile .places-pagination > div { width: 100%; margin-left: 0; justify-content: space-between; }
-.device-mobile .places-pagination button { flex: 1 1 0; }
-.device-mobile .places-pagination .page-number { flex: 0 0 50px; }
-.device-mobile .detail-panel { right: 12px; bottom: 12px; width: calc(100% - 24px); max-height: calc(100% - 24px); overflow-y: auto; }
+@media (max-width: 760px) {
+  .topbar h1 { font-size: 20px; line-height: 1.2; }
+  .top-actions { gap: 6px; }
+  .top-actions button { min-width: 42px; min-height: 42px; }
+  .summary > div { padding: 18px 16px; }
+  .metric-label { font-size: 13px; }
+  .summary strong { font-size: 24px; }
+  .section-heading h2 { font-size: 18px; }
+  .section-heading span { font-size: 13px; }
+  .filters label { margin-bottom: 8px; font-size: 14px; }
+  .filters select { min-height: 48px; padding: 12px; font-size: 16px; }
+  .filters select + label { margin-top: 18px; }
+  .business-row { min-height: 60px; padding: 12px 8px; }
+  .business-row strong { overflow: visible; white-space: normal; font-size: 16px; line-height: 1.3; text-overflow: clip; }
+  .business-row small { overflow: visible; white-space: normal; font-size: 13px; line-height: 1.4; text-overflow: clip; }
+  .places-pagination { font-size: 13px; }
+  .places-pagination button { min-height: 44px; padding: 0 10px; font-size: 14px; }
+  .detail-panel { padding: 18px; }
+  .detail-panel h2 { font-size: 20px; line-height: 1.25; }
+  .detail-lines p { font-size: 14px; line-height: 1.5; }
+  .detail-lines span { font-size: 12px; }
+  .maplibregl-ctrl-group button { width: 44px; height: 44px; }
+  .modal-backdrop { padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)); }
+  .database-modal { width: 100%; height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); min-height: 0; }
+  .modal-header h2 { font-size: 20px; line-height: 1.25; }
+  .modal-description { font-size: 14px; line-height: 1.45; }
+  .database-tabs button { min-height: 48px; padding: 12px 14px; font-size: 15px; }
+  .database-view-filter label { font-size: 14px; }
+  .database-view-filter select { min-height: 48px; font-size: 16px; }
+  .database-search { min-height: 48px; font-size: 16px; }
+  .export-actions a { display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .category-form input, .category-form button { min-height: 48px; font-size: 16px; }
+  .category-form span { font-size: 13px; }
+  .database-table-wrap { flex: 1 1 auto; min-height: 0; }
+  .database-table-wrap table { font-size: 13px; }
+  .database-table-wrap th { padding: 12px; font-size: 12px; line-height: 1.35; }
+  .database-table-wrap td { padding: 12px; font-size: 13px; line-height: 1.4; }
+  .database-table-wrap td small { font-size: 12px; }
+  .database-category { min-height: 38px; font-size: 13px; }
+  .mono { font-size: 12px; }
+  .modal-footer { font-size: 13px; }
+  .modal-footer button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
+  .analytics-modal { width: 100%; max-height: calc(100dvh - 16px); }
+  .analytics-content { padding: 18px 16px 22px; }
+  .analytics-grid { gap: 26px; }
+  .analytics-chart h3 { margin-bottom: 16px; font-size: 16px; line-height: 1.35; }
+  .bar-chart { gap: 12px; }
+  .bar-row { grid-template-columns: minmax(90px, 1fr) minmax(90px, 2fr) 36px; gap: 8px; font-size: 13px; }
+  .bar-track { height: 12px; }
+  .pie-chart-panel { grid-template-columns: minmax(110px, 128px) minmax(0, 1fr); column-gap: 14px; }
+  .pie-chart { width: min(128px, 100%); }
+  .pie-legend { gap: 10px; font-size: 13px; }
+  .pie-legend span { line-height: 1.4; }
+  .changelog-modal { width: 100%; max-height: calc(100dvh - 16px); overflow-y: auto; padding: 22px 18px; }
+  .changelog-modal h2 { font-size: 24px; line-height: 1.25; }
+  .changelog-date { font-size: 14px; }
+  .changelog-modal ul { font-size: 15px; line-height: 1.65; }
+  .credits { font-size: 14px; line-height: 1.55; }
+}
+@media (max-width: 760px) {
+  .detail-panel { top: 12px; bottom: auto; z-index: 3; width: min(420px, calc(100% - 24px)); max-height: min(75dvh, calc(100dvh - 96px)); overflow-y: auto; overscroll-behavior: contain; }
+  .detail-panel .close { top: 8px; right: 10px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+  .detail-panel h2 { padding-right: 42px; }
+}
