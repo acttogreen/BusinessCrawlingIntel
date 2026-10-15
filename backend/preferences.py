@@ -23,22 +23,24 @@ def _parse_env() -> dict[str, str]:
 
 def read_preferences() -> dict[str, Any] | None:
     values = _parse_env()
-    provider = values.get("AI_PROVIDER", "openai").strip().lower()
-    token = values.get("AI_TOKEN", values.get("OPENAI_API_KEY", "")).strip()
-    endpoint = values.get("AI_ENDPOINT", "").strip()
+    provider = values.get("AI_PROVIDER", values.get("OPENAI_API_TYPE", "custom")).strip().lower()
+    token = values.get("AI_API_TOKEN", values.get("AI_TOKEN", values.get("OPENAI_API_KEY", ""))).strip()
+    endpoint = values.get("AI_ENDPOINT", values.get("OPENAI_API_BASE", "")).strip()
     if provider in {"ollama", "local"} and not endpoint:
         endpoint = "http://127.0.0.1:11434/v1"
     if provider in {"openai", "groq", "together"} and not endpoint:
         endpoint = {"openai": "https://api.openai.com/v1", "groq": "https://api.groq.com/openai/v1", "together": "https://api.together.xyz/v1"}[provider]
-    if not token and provider not in {"ollama", "local"}:
-        return None
     return {
         "provider": provider,
-        "model": values.get("AI_MODEL", "gpt-4o-mini"),
+        "model": values.get("AI_MODEL", values.get("OPENAI_MODEL", "")).strip(),
         "token": token,
         "endpoint": endpoint,
-        "batch_size": int(values.get("AI_BATCH_SIZE", "5")),
+        "batch_size": max(1, min(200, int(values.get("AI_BATCH_SIZE", "20")))),
+        "timeout_seconds": max(30, min(600, int(values.get("AI_TIMEOUT_SECONDS", "180")))),
+        "retry_count": max(0, min(5, int(values.get("AI_RETRY_COUNT", "2")))),
         "confidence": float(values.get("AI_CONFIDENCE", "0.75")),
+        "ruleset": values.get("AI_RULESET", "").replace("\\\\n", "\\n").strip(),
+        "web_lookup": values.get("AI_WEB_LOOKUP", "false").lower() == "true",
     }
 
 
@@ -46,17 +48,23 @@ def write_preferences(settings: dict[str, Any]) -> None:
     existing = _parse_env()
     token = str(settings.get("token", "")).strip()
     if not token:
-        token = existing.get("AI_TOKEN", existing.get("OPENAI_API_KEY", "")).strip()
+        token = existing.get("AI_API_TOKEN", existing.get("AI_TOKEN", existing.get("OPENAI_API_KEY", ""))).strip()
     settings = {**settings, "token": token}
+    ruleset = str(settings.get("ruleset", "")).replace("\r", "").replace("\n", "\\n")
     lines = [
         "# Local AI settings. This file is ignored by Git; do not commit it.",
         f"AI_TOKEN={settings.get('token', '')}",
+        f"AI_API_TOKEN={settings.get('token', '')}",
         f"OPENAI_API_KEY={settings.get('token', '')}",
         f"AI_PROVIDER={settings.get('provider', 'openai')}",
         f"AI_MODEL={settings.get('model', 'gpt-4o-mini')}",
         f"AI_ENDPOINT={settings.get('endpoint', '')}",
-        f"AI_BATCH_SIZE={settings.get('batch_size', 5)}",
+        f"AI_BATCH_SIZE={settings.get('batch_size', 20)}",
+        f"AI_TIMEOUT_SECONDS={settings.get('timeout_seconds', 180)}",
+        f"AI_RETRY_COUNT={settings.get('retry_count', 2)}",
         f"AI_CONFIDENCE={settings.get('confidence', 0.75)}",
+        f"AI_WEB_LOOKUP={'true' if settings.get('web_lookup', False) else 'false'}",
+        f"AI_RULESET={ruleset}",
         "",
     ]
     try:
@@ -70,6 +78,6 @@ def write_preferences(settings: dict[str, Any]) -> None:
 
 def preferences_status() -> dict[str, Any]:
     values = _parse_env()
-    provider = values.get("AI_PROVIDER", "openai").strip().lower()
-    configured = bool(values.get("AI_TOKEN", values.get("OPENAI_API_KEY", "")).strip()) or provider in {"ollama", "local"}
+    provider = values.get("AI_PROVIDER", values.get("OPENAI_API_TYPE", "custom")).strip().lower()
+    configured = bool(values.get("AI_API_TOKEN", values.get("AI_TOKEN", values.get("OPENAI_API_KEY", ""))).strip()) or provider in {"ollama", "local"}
     return {"configured": configured, "provider": provider, "endpoint": values.get("AI_ENDPOINT", ""), "path": str(ENV_PATH), "read_only": False}

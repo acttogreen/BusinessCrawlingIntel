@@ -1,6 +1,7 @@
 """AI preflight and structured company-candidate curation."""
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any
 
@@ -41,11 +42,43 @@ def check_saved_connection() -> dict[str, Any]:
     settings = _settings()
     headers = {"Authorization": f"Bearer {settings['token'].strip()}"} if settings.get("token", "").strip() else {}
     response = requests.get(f"{_base_endpoint(settings)}/models", headers=headers, timeout=15)
+    provider = str(settings.get("provider", "custom"))
     if response.status_code in {401, 403}:
-        raise RuntimeError("Token OpenAI ditolak oleh provider.")
+        raise RuntimeError(f"Token/provider {provider} ditolak.")
     if not response.ok:
-        raise RuntimeError(f"OpenAI merespons HTTP {response.status_code}.")
-    return {"connected": True, "provider": settings.get("provider", "openai"), "model": settings.get("model", "gpt-4o-mini")}
+        raise RuntimeError(f"Provider {provider} merespons HTTP {response.status_code}.")
+    return {"connected": True, "provider": provider, "model": settings.get("model", "")}
+
+
+def _parse_json_content(content: Any) -> dict[str, Any]:
+    """Parse a provider response while tolerating common formatting wrappers."""
+    if not isinstance(content, str) or not content.strip():
+        raise RuntimeError("Provider AI mengembalikan respons JSON kosong.")
+    text = content.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if lines and lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\\n".join(lines).strip()
+    try:
+        result = json.loads(text)
+    except json.JSONDecodeError as exc:
+        # Some compatible servers append a short explanation after valid JSON.
+        decoder = json.JSONDecoder()
+        try:
+            result, end = decoder.raw_decode(text)
+            if text[end:].strip():
+                raise exc
+        except (json.JSONDecodeError, TypeError) as parse_exc:
+            preview = text[max(0, exc.pos - 80):exc.pos + 80].replace("\\n", " ")
+            raise RuntimeError(
+                f"Provider AI mengembalikan JSON tidak valid pada karakter {exc.pos}: {preview!r}"
+            ) from parse_exc
+    if not isinstance(result, dict):
+        raise RuntimeError("Provider AI mengembalikan JSON dengan bentuk yang tidak didukung.")
+    return result
 
 
 def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
@@ -53,7 +86,7 @@ def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
     if settings.get("token", "").strip():
         headers["Authorization"] = f"Bearer {settings['token'].strip()}"
     payload = {
-        "model": settings.get("model") or "gpt-4o-mini",
+        "model": settings.get("model") or "",
         "temperature": 0,
         "response_format": {"type": "json_object"},
         "messages": [
@@ -63,26 +96,37 @@ def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
     }
     url = f"{_base_endpoint(settings)}/chat/completions"
     last_error: requests.RequestException | None = None
-    for attempt in range(2):
+    timeout_seconds = max(30, min(600, int(settings.get("timeout_seconds", 180))))
+    retry_count = max(0, min(5, int(settings.get("retry_count", 2))))
+    for attempt in range(retry_count + 1):
         try:
-            response = requests.post(url, headers=headers, json=payload, timeout=(15, 600))
+            response = requests.post(url, headers=headers, json=payload, timeout=(15, timeout_seconds))
             break
         except requests.Timeout as exc:
             last_error = exc
-            if attempt == 1:
-                raise RuntimeError("AI curation timed out after 600 seconds. Kurangi AI_BATCH_SIZE jika model lokal masih lambat.") from exc
+            if attempt == retry_count:
+                raise RuntimeError(f"AI curation timed out after {timeout_seconds} seconds. Kurangi ukuran batch jika perlu.") from exc
         except requests.ConnectionError as exc:
             last_error = exc
-            if attempt == 1:
-                raise RuntimeError("Provider AI terputus saat kurasi setelah percobaan ulang.") from exc
+            if attempt == retry_count:
+                raise RuntimeError("Provider AI terputus setelah percobaan ulang.") from exc
     else:
         raise RuntimeError("Provider AI tidak dapat dihubungi.") from last_error
     if not response.ok:
         detail = response.text.strip().replace("\n", " ")[:300]
         suffix = f": {detail}" if detail else ""
-        raise RuntimeError(f"OpenAI curation failed with HTTP {response.status_code}{suffix}.")
-    content = response.json()["choices"][0]["message"]["content"]
-    return json.loads(content)
+        provider = settings.get("provider", "custom")
+        raise RuntimeError(f"{provider} curation failed with HTTP {response.status_code}{suffix}.")
+    try:
+        response_payload = response.json()
+        choice = response_payload["choices"][0]
+        message = choice["message"]
+        content = message.get("content")
+    except (ValueError, KeyError, IndexError, TypeError) as exc:
+        raise RuntimeError("Provider AI mengembalikan format respons yang tidak lengkap.") from exc
+    if choice.get("finish_reason") == "length":
+        raise RuntimeError("Respons AI terpotong karena batas token. Kurangi ukuran batch.")
+    return _parse_json_content(content)
 
 
 def curate_candidates(candidates: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -92,10 +136,15 @@ def curate_candidates(candidates: list[dict[str, Any]]) -> tuple[list[dict[str, 
     curated: list[dict[str, Any]] = []
     rejected = 0
     field_issues = 0
+    batch_timings: list[dict[str, Any]] = []
+    started_at = time.perf_counter()
     for start in range(0, len(candidates), batch_size):
         batch = candidates[start:start + batch_size]
+        batch_started_at = time.perf_counter()
         prompt = json.dumps({
-            "task": "Enrich and reconcile these company candidates. Use only raw_data.source_text, raw_data.context_lines, and evidence as source evidence. You may fill or correct a field only when the source explicitly supports it; otherwise preserve the original value or leave it empty. Never infer, browse, or guess. Keep real business entities and remove duplicates/non-business entries.",
+            "task": "Enrich and reconcile these company candidates. Treat evidence as the primary raw reference, then raw_data.source_text and raw_data.context_lines. Verify district, business_sector, and phone_number against evidence. Internet lookup is allowed only when enabled in settings; cite the URL and keep the raw evidence unchanged. Never replace evidence with web data, invent, or make unsupported inferences. Keep real business entities and remove duplicates/non-business entries.",
+            "ruleset": settings.get("ruleset", "Use conservative reconciliation: evidence wins; if conflict or uncertainty remains, preserve the original and mark review."),
+            "web_lookup_enabled": bool(settings.get("web_lookup", False)),
             "required_fields": FIELDS,
             "minimum_confidence": minimum,
             "candidates": batch,
@@ -117,7 +166,8 @@ def curate_candidates(candidates: list[dict[str, Any]]) -> tuple[list[dict[str, 
             curated.append(item)
         rejected += int(result.get("rejected", 0) or 0)
         field_issues += int(result.get("field_issues", 0) or 0)
-    return curated, {"input": len(candidates), "accepted": len(curated), "rejected": rejected, "field_issues": field_issues, "model": settings.get("model", "gpt-4o-mini")}
+        batch_timings.append({"batch": start // batch_size + 1, "input": len(batch), "duration_seconds": round(time.perf_counter() - batch_started_at, 2)})
+    return curated, {"input": len(candidates), "accepted": len(curated), "rejected": rejected, "field_issues": field_issues, "model": settings.get("model", "gpt-4o-mini"), "duration_seconds": round(time.perf_counter() - started_at, 2), "batch_timings": batch_timings}
 
 
 def curation_status() -> dict[str, Any]:

@@ -22,6 +22,10 @@ type Business = {
 };
 type ActivityEvent = { business_id?: string; type: string; detected_at: string; description: string; details?: Record<string, unknown> };
 type DatabaseSortKey = "id" | "name" | "category" | "business_type" | "legal_entity" | "investment_type" | "contact" | "year" | "coordinates" | "source";
+type AIStatus = { connected: boolean; configured?: boolean; provider?: string; model?: string; message?: string };
+const API = (import.meta.env.VITE_API_BASE || "").replace(/\/$/, "");
+const loadAIStatus = async (): Promise<AIStatus> => { const response = await fetch(`${API}/api/preferences/curation-status`, { cache: "no-store" }); const payload: unknown = await response.json().catch(() => ({})); if (!payload || typeof payload !== "object") throw new Error("AI status request failed"); const value = payload as Record<string, unknown>; return { connected: value.connected === true, configured: value.configured === true, provider: typeof value.provider === "string" ? value.provider : undefined, model: typeof value.model === "string" ? value.model : undefined, message: typeof value.message === "string" ? value.message : undefined }; };
+function AIConnectionBadge({ status, onRefresh, language }: { status: AIStatus; onRefresh: () => void; language: Language }) { return <button type="button" className={`launcher-ai-status ${status.connected ? "connected" : "disconnected"}`} onClick={onRefresh} aria-label={language === "id" ? "Perbarui status AI" : "Refresh AI status"}><span className="ai-status-dot" /><span><strong>{status.connected ? (language === "id" ? "AI terhubung" : "AI connected") : (language === "id" ? "AI tidak terhubung" : "AI unavailable")}</strong><small>{status.provider ? `${status.provider} · ${status.model || "model belum diatur"}` : (status.message || "Status AI belum dimuat")}</small></span><span aria-hidden="true">↻</span></button>; }
 
 const countValues = (businesses: Business[], getValue: (business: Business) => string | undefined) => Object.entries(businesses.reduce<Record<string, number>>((counts, business) => { const value = getValue(business) || "Unknown"; counts[value] = (counts[value] || 0) + 1; return counts; }, {})).sort((a, b) => b[1] - a[1]);
 
@@ -84,12 +88,15 @@ function App() {
   const [categoryStatus, setCategoryStatus] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMessage, setRefreshMessage] = useState("");
+  const [aiStatus, setAIStatus] = useState<AIStatus>({ connected: false, message: "Memeriksa koneksi AI…" });
+  const refreshAIStatus = () => { void loadAIStatus().then(setAIStatus).catch(() => setAIStatus({ connected: false, message: "Status koneksi AI tidak dapat dimuat." })); };
   const mapNode = useRef<HTMLDivElement>(null);
   const map = useRef<Map | null>(null);
   const markers = useRef<Marker[]>([]);
   const activityData = useRef<ActivityEvent[]>([]);
   const t: Record<string, string> = { all: language === "id" ? "Semua" : "All", unknownYear: language === "id" ? "Tahun tidak diketahui" : "Unknown year", ...copy[language] };
 
+  useEffect(() => { refreshAIStatus(); }, []);
   useEffect(() => {
     Promise.all([fetch(`${DATA_BASE}/business_database_mapping.json`), fetch(`${DATA_BASE}/activities.json`)]).then(async ([businessResponse, activityResponse]) => {
       const [mappingData, activityData] = await Promise.all([businessResponse.json(), activityResponse.json()]);
@@ -190,7 +197,7 @@ function App() {
   };
 
   return <div className={`app-shell ${darkMode ? "theme-dark" : ""}`}>
-    <header className="topbar"><div><p className="eyebrow">KOTA SURAKARTA</p><h1>{t.title}</h1></div><nav className="top-actions" aria-label="Dashboard controls"><button className="refresh-button" onClick={refreshOsm} disabled={refreshing}>↻ <span>{refreshing ? refreshMessage : t.refresh}</span></button><button className="database-button" onClick={() => setDatabaseOpen(true)}>▦ <span>{t.database}</span></button><button className="database-button" onClick={() => setChangelogOpen(true)}>⌘ <span>{t.changelog}</span></button><button className="database-button" onClick={() => setAnalyticsOpen(true)}>▥ <span>{t.analytics}</span></button><button className="database-button" onClick={() => setPdfExtractorOpen(true)}>▤ <span>PDF Extractor</span></button><button className="database-button" onClick={() => setSettingsOpen(true)}>⚙ <span>{language === "id" ? "Pengaturan" : "Settings"}</span></button><button className="language-toggle" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={`${t.language}: ${language.toUpperCase()}`}>{language === "id" ? "ID" : "EN"}</button><button className="theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={`${t.theme}: ${darkMode ? t.dark : t.light}`}>{darkMode ? "☀" : "☾"}</button><div className="source-badge"><span className="status-dot" /> {t.source}</div></nav></header>
+    <header className="topbar"><div><p className="eyebrow">KOTA SURAKARTA</p><h1>{t.title}</h1></div><nav className="top-actions" aria-label="Dashboard controls"><AIConnectionBadge status={aiStatus} onRefresh={refreshAIStatus} language={language} /><button className="refresh-button" onClick={refreshOsm} disabled={refreshing}>↻ <span>{refreshing ? refreshMessage : t.refresh}</span></button><button className="database-button" onClick={() => setDatabaseOpen(true)}>▦ <span>{t.database}</span></button><button className="database-button" onClick={() => setChangelogOpen(true)}>⌘ <span>{t.changelog}</span></button><button className="database-button" onClick={() => setAnalyticsOpen(true)}>▥ <span>{t.analytics}</span></button><button className="database-button" onClick={() => setPdfExtractorOpen(true)}>▤ <span>PDF Extractor</span></button><button className="database-button" onClick={() => setSettingsOpen(true)}>⚙ <span>{language === "id" ? "Pengaturan" : "Settings"}</span></button><button className="language-toggle" onClick={() => setLanguage(language === "id" ? "en" : "id")} aria-label={`${t.language}: ${language.toUpperCase()}`}>{language === "id" ? "ID" : "EN"}</button><button className="theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={`${t.theme}: ${darkMode ? t.dark : t.light}`}>{darkMode ? "☀" : "☾"}</button><div className="source-badge"><span className="status-dot" /> {t.source}</div></nav></header>
     <main className="dashboard">
       <aside className="sidebar">
         <section className="summary"><div><span className="metric-label">{t.mapped}</span><strong>{businesses.length.toLocaleString()}</strong></div><div><span className="metric-label">{t.visible}</span><strong>{filtered.length.toLocaleString()}</strong></div></section>

@@ -1,0 +1,5 @@
+2026-10-15T14:14:17.355362+00:00 — queued → processing
+2026-10-15T14:14:17.355362+00:00 — OpenDataLoader started
+2026-10-15T14:14:29.791659+00:00 — OpenDataLoader completed (exit 0)
+2026-10-15T14:14:29.806177+00:00 — Parsing company fields started
+2026-10-15T14:14:29.950949+00:00 — Extracted 96 valid companies; raw and live JSON artifacts generated

@@ -27,27 +27,25 @@ from backend.ai_curation import curation_status, load_and_curate, preference_err
 app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
 
 
-@app.get("/api/preferences")
+@app.get("/api/preferences", response_model=dict[str, Any])
 def get_preferences() -> dict[str, Any]:
     settings = read_preferences()
     if not settings:
-        return {"configured": False, "provider": "openai", "model": "gpt-4o-mini", "endpoint": "", "batch_size": 5, "confidence": 0.75, "token_configured": False}
+        settings = {"provider": "openai", "model": "gpt-4o-mini", "endpoint": "https://api.openai.com/v1", "batch_size": 20, "timeout_seconds": 180, "retry_count": 2, "confidence": 0.75, "ruleset": "", "web_lookup": False, "token": ""}
     return {
-        "configured": True,
+        "configured": bool(settings.get("token")) or settings.get("provider") in {"ollama", "local"},
         "provider": settings["provider"],
         "model": settings["model"],
         "endpoint": settings["endpoint"],
         "batch_size": settings["batch_size"],
+        "timeout_seconds": settings.get("timeout_seconds", 180),
+        "retry_count": settings.get("retry_count", 2),
         "confidence": settings["confidence"],
+        "ruleset": settings.get("ruleset", ""),
+        "web_lookup": settings.get("web_lookup", False),
         "token_configured": bool(settings.get("token")),
     }
 
-
-
-from backend.ai_curation import curation_status, load_and_curate, preference_error
-
-
-app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
 
 
 class PreferencesInput(BaseModel):
@@ -55,8 +53,12 @@ class PreferencesInput(BaseModel):
     model: str = Field(default="", max_length=200)
     token: str = Field(default="", max_length=1000)
     endpoint: str = Field(default="", max_length=500)
-    batch_size: int = Field(ge=1, le=200)
-    confidence: float = Field(ge=0, le=1)
+    batch_size: int = Field(default=20, ge=1, le=200)
+    timeout_seconds: int = Field(default=180, ge=30, le=600)
+    retry_count: int = Field(default=2, ge=0, le=5)
+    confidence: float = Field(default=0.75, ge=0, le=1)
+    ruleset: str = Field(default="", max_length=12000)
+    web_lookup: bool = False
     mapping: dict[str, Any]
 
 
@@ -103,7 +105,8 @@ def preference_curation_status() -> dict[str, Any]:
     try:
         return curation_status()
     except requests.RequestException:
-        return {"connected": False, "configured": True, "message": "Provider OpenAI tidak dapat dihubungi."}
+        settings = read_preferences() or {}
+        return {"connected": False, "configured": True, "provider": settings.get("provider"), "model": settings.get("model"), "message": "Provider AI tidak dapat dihubungi."}
     except RuntimeError as exc:
         return {"connected": False, "configured": True, "message": str(exc)}
 
@@ -114,6 +117,11 @@ def save_preferences(payload: PreferencesInput) -> dict[str, Any]:
     settings["provider"] = settings["provider"].strip().lower()
     settings["endpoint"] = settings["endpoint"].strip().rstrip("/")
     settings["model"] = settings["model"].strip()
+    existing = read_preferences() or {}
+    if not settings["model"]:
+        settings["model"] = str(existing.get("model", "")).strip()
+    if not settings["endpoint"]:
+        settings["endpoint"] = str(existing.get("endpoint", "")).strip()
     if not settings["model"]:
         if not settings["endpoint"]:
             raise HTTPException(status_code=422, detail="Endpoint wajib diisi jika model dikosongkan")
