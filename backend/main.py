@@ -528,6 +528,27 @@ def ingestion_companies(document_id: str) -> list[dict[str, Any]]:
     except (OSError, json.JSONDecodeError): return []
 
 
+@app.put("/api/ingestion/documents/{document_id}/companies/{company_index}")
+def ingestion_update_company(document_id: str, company_index: int, payload: dict[str, Any]) -> dict[str, Any]:
+    document = get_document(document_id); project = get_project(document["project_id"]) if document else None
+    if not document or not project: raise HTTPException(404, "Document not found")
+    folder = document_path(project, document_id)
+    json_path = folder / (document.get("companies_artifact") or "company_candidates.json")
+    csv_path = folder / (document.get("companies_csv_artifact") or "company_candidates.csv")
+    try: candidates = json.loads(json_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError): raise HTTPException(404, "Candidates artifact not found")
+    if not isinstance(candidates, list) or company_index < 0 or company_index >= len(candidates): raise HTTPException(404, "Candidate not found")
+    allowed = {"company_name", "legal_entity", "address", "district", "city", "province", "business_sector", "source_url", "evidence", "investment_type", "phone_number"}
+    candidates[company_index] = {key: str(payload.get(key, "")) if key in allowed else value for key, value in candidates[company_index].items()}
+    for key in allowed:
+        if key in payload: candidates[company_index][key] = str(payload[key] or "")
+    json_path.write_text(json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8")
+    fields = list(candidates[0].keys()) if candidates else list(allowed)
+    with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows(candidates)
+    return candidates[company_index]
+
+
 @app.delete("/api/ingestion/documents/{document_id}/companies/{company_index}")
 def ingestion_delete_company(document_id: str, company_index: int) -> dict[str, Any]:
     document = get_document(document_id); project = get_project(document["project_id"]) if document else None

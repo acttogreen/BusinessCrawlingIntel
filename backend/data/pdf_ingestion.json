@@ -15,20 +15,36 @@
       "status": "active",
       "created_at": "2026-10-15T08:07:22.658842+00:00",
       "updated_at": "2026-10-15T08:07:22.658842+00:00"
+    },
+    {
+      "id": "project_9a1925b035e44febad7efde61d71547f",
+      "province_code": "11",
+      "province_name": "Aceh",
+      "regency_code": "11.05",
+      "regency_name": "Kabupaten Aceh Barat",
+      "region_name": "Kabupaten Aceh Barat",
+      "region_type": "kabupaten",
+      "source_year": 2026,
+      "source_category": null,
+      "description": null,
+      "notes": null,
+      "status": "active",
+      "created_at": "2026-10-15T17:38:28.778921+00:00",
+      "updated_at": "2026-10-15T17:38:28.778921+00:00"
     }
   ],
   "documents": [
     {
-      "id": "document_b43b765948c749e6af84b297edef81d0",
+      "id": "document_01e5430d04b44be2afb238335855a94e",
       "project_id": "project_b3cb0ecac4274ab78deecf55d6a0cc84",
       "province_name": "Jawa Tengah",
       "region_name": "Kabupaten Kendal",
       "original_filename": "direktori-industri-manufaktur-kabupaten-kendal-2025.pdf",
       "sha256": "7cb87ea5fad8d0ac14d5123517965c35c1fa507448f902dcf4d8870aebe9e48d",
       "status": "completed",
-      "uploaded_at": "2026-10-15T14:14:14.604695+00:00",
-      "started_at": "2026-10-15T14:14:17.351363+00:00",
-      "completed_at": "2026-10-15T14:14:29.950949+00:00",
+      "uploaded_at": "2026-10-15T17:25:58.915827+00:00",
+      "started_at": "2026-10-15T17:26:02.817516+00:00",
+      "completed_at": "2026-10-15T17:26:17.305242+00:00",
       "parser": "opendataloader-pdf 2.5.13",
       "json_artifact": "original.json",
       "markdown_artifact": "original.md",
@@ -38,7 +54,7 @@
       "raw_companies_artifact": "company_candidates_raw.json",
       "companies_artifact": "company_candidates.json",
       "companies_csv_artifact": "company_candidates.csv",
-      "companies_count": 73,
+      "companies_count": 78,
       "extraction": {
         "companies": 0,
         "elements": 0,
@@ -47,61 +63,61 @@
       "curation_artifact": "company_candidates.json",
       "curation": {
         "input": 96,
-        "accepted": 73,
-        "rejected": 14,
-        "field_issues": 271,
+        "accepted": 78,
+        "rejected": 8,
+        "field_issues": 177,
         "model": "code-agent",
-        "duration_seconds": 377.06,
+        "duration_seconds": 305.2,
         "batch_timings": [
           {
             "batch": 1,
             "input": 10,
-            "duration_seconds": 50.23
+            "duration_seconds": 11.6
           },
           {
             "batch": 2,
             "input": 10,
-            "duration_seconds": 17.31
+            "duration_seconds": 38.12
           },
           {
             "batch": 3,
             "input": 10,
-            "duration_seconds": 22.2
+            "duration_seconds": 54.77
           },
           {
             "batch": 4,
             "input": 10,
-            "duration_seconds": 19.27
+            "duration_seconds": 26.7
           },
           {
             "batch": 5,
             "input": 10,
-            "duration_seconds": 39.95
+            "duration_seconds": 26.05
           },
           {
             "batch": 6,
             "input": 10,
-            "duration_seconds": 34.07
+            "duration_seconds": 24.6
           },
           {
             "batch": 7,
             "input": 10,
-            "duration_seconds": 49.17
+            "duration_seconds": 9.05
           },
           {
             "batch": 8,
             "input": 10,
-            "duration_seconds": 51.76
+            "duration_seconds": 50.25
           },
           {
             "batch": 9,
             "input": 10,
-            "duration_seconds": 58.44
+            "duration_seconds": 30.62
           },
           {
             "batch": 10,
             "input": 6,
-            "duration_seconds": 34.65
+            "duration_seconds": 33.44
           }
         ],
         "validation": {
@@ -241,12 +257,6 @@
             },
             {
               "index": 7,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 7,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -254,12 +264,6 @@
             {
               "index": 8,
               "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 8,
-              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -284,12 +288,6 @@
             {
               "index": 9,
               "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 10,
-              "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -307,13 +305,7 @@
             },
             {
               "index": 11,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 11,
-              "field": "source_url",
+              "field": "district",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -331,25 +323,7 @@
             },
             {
               "index": 12,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 12,
               "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 13,
-              "field": "district",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 13,
-              "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -361,43 +335,13 @@
             },
             {
               "index": 14,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 14,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 15,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 15,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 15,
               "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 16,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 16,
-              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -415,12 +359,6 @@
             },
             {
               "index": 18,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 18,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -433,12 +371,6 @@
             },
             {
               "index": 20,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 20,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -482,6 +414,12 @@
             {
               "index": 23,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 23,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -494,6 +432,12 @@
             {
               "index": 24,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 24,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -506,6 +450,12 @@
             {
               "index": 25,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 25,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -517,7 +467,25 @@
             },
             {
               "index": 26,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 26,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 26,
               "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 27,
+              "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -541,6 +509,12 @@
             },
             {
               "index": 28,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 28,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -565,25 +539,7 @@
             },
             {
               "index": 30,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 30,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 30,
               "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 31,
-              "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -607,31 +563,37 @@
             },
             {
               "index": 33,
-              "field": "business_sector",
+              "field": "legal_entity",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 33,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 34,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 34,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 35,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 35,
               "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 33,
-              "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 34,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 34,
-              "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -661,6 +623,12 @@
             },
             {
               "index": 37,
+              "field": "legal_entity",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 37,
               "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
@@ -679,6 +647,12 @@
             },
             {
               "index": 38,
+              "field": "legal_entity",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 38,
               "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
@@ -697,67 +671,37 @@
             },
             {
               "index": 39,
+              "field": "legal_entity",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 39,
               "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 39,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 39,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 40,
-              "field": "address",
+              "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
-              "index": 40,
-              "field": "district",
+              "index": 41,
+              "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
-              "index": 40,
+              "index": 42,
               "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 40,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 40,
-              "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 41,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 41,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 41,
-              "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -805,6 +749,12 @@
             },
             {
               "index": 45,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 45,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -817,13 +767,19 @@
             },
             {
               "index": 46,
-              "field": "source_url",
+              "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
-              "index": 46,
-              "field": "phone_number",
+              "index": 47,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 47,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -847,24 +803,6 @@
             },
             {
               "index": 49,
-              "field": "address",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 49,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 49,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 49,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -902,12 +840,6 @@
             {
               "index": 51,
               "field": "phone_number",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 52,
-              "field": "business_sector",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -931,6 +863,18 @@
             },
             {
               "index": 54,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 54,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 54,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -938,6 +882,12 @@
             {
               "index": 55,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 55,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -950,6 +900,12 @@
             {
               "index": 56,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 56,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -985,18 +941,6 @@
             },
             {
               "index": 59,
-              "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 59,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 59,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -1009,12 +953,6 @@
             },
             {
               "index": 60,
-              "field": "source_url",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 60,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
@@ -1022,12 +960,6 @@
             {
               "index": 61,
               "field": "business_sector",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 61,
-              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1040,6 +972,12 @@
             {
               "index": 62,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 62,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1051,7 +989,19 @@
             },
             {
               "index": 63,
+              "field": "legal_entity",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 63,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 63,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1064,6 +1014,12 @@
             {
               "index": 64,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 64,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1117,25 +1073,25 @@
             },
             {
               "index": 67,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 67,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 68,
-              "field": "address",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 68,
-              "field": "district",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 68,
               "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 68,
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1153,25 +1109,19 @@
             },
             {
               "index": 69,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 69,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             },
             {
               "index": 70,
-              "field": "address",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 70,
-              "field": "district",
-              "valid": false,
-              "reason": "Field kosong"
-            },
-            {
-              "index": 70,
-              "field": "business_sector",
+              "field": "source_url",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1183,7 +1133,25 @@
             },
             {
               "index": 71,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 71,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 71,
               "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 72,
+              "field": "district",
               "valid": false,
               "reason": "Field kosong"
             },
@@ -1195,12 +1163,132 @@
             },
             {
               "index": 72,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 72,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 73,
+              "field": "district",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 73,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 73,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 73,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 74,
+              "field": "district",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 74,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 74,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 74,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 75,
+              "field": "district",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 75,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 75,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 75,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 76,
+              "field": "district",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 76,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 76,
+              "field": "phone_number",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 77,
+              "field": "district",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 77,
+              "field": "business_sector",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 77,
+              "field": "source_url",
+              "valid": false,
+              "reason": "Field kosong"
+            },
+            {
+              "index": 77,
               "field": "phone_number",
               "valid": false,
               "reason": "Field kosong"
             }
           ],
-          "checked": 803
+          "checked": 858
         },
         "batches": 10
       }

@@ -189,6 +189,9 @@
 .ingestion-form label { display: flex; flex-direction: column; gap: 5px; font-size: 11px; color: #6d777d; }
 .ingestion-form input, .ingestion-form select, .ingestion-form textarea, .ingestion-list > input { padding: 9px; border: 1px solid #d6d3cb; border-radius: 4px; background: #f8f6f0; }
 .ingestion-form button, .document-actions button { padding: 8px 10px; border: 1px solid #a45b3e; border-radius: 4px; background: #a45b3e; color: white; cursor: pointer; }
+.loading-spinner { display: inline-block; width: 13px; height: 13px; margin-right: 7px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: -2px; animation: loading-spinner-spin .7s linear infinite; }
+@keyframes loading-spinner-spin { to { transform: rotate(360deg); } }
+.btn-process-extraction:disabled { cursor: wait; opacity: .8; }
 .ingestion-project { padding: 12px; text-align: left; border: 1px solid #dedbd3; background: #fffdf9; cursor: pointer; }
 .dropzone { padding: 22px; border: 1px dashed #a45b3e; text-align: center; color: #6d777d; cursor: pointer; }.dropzone input { display: block; margin: 10px auto 0; }
 .document-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #dedbd3; }.document-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }.document-actions a { color: #a45b3e; font-size: 11px; }.document-reset { padding: 6px 9px; border: 1px solid #c65f49; border-radius: 4px; background: #fff3ef; color: #a94432; font-size: 11px; cursor: pointer; }.document-reset:hover:not(:disabled) { background: #fbe0d8; }.document-reset:disabled { opacity: .45; cursor: not-allowed; }.theme-dark .document-reset { border-color: #a95b4a; background: #3a2724; color: #ffb8a7; }.ingestion-message { grid-column: 1 / -1; padding: 10px 12px; border-left: 3px solid #3e9c7a; background: #eef8f3; color: #246b52; font-size: 12px; }
@@ -310,9 +313,12 @@
 
 /* Configuration editors and status console stay aligned in both themes. */
 .settings-section .mapping-editor,
-.settings-section .schema-code-block { display: block; width: 100%; min-width: 0; height: 260px; min-height: 260px; max-height: 260px; margin-top: 6px; padding: 12px 13px !important; resize: vertical; overflow: auto; box-sizing: border-box; border: 1px solid #d6d3cb !important; border-radius: 6px !important; background: #f8f6f0 !important; color: #23313f !important; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace !important; white-space: pre; tab-size: 2; scrollbar-color: #b8b4aa #eeeae2; }
+.settings-section .schema-code-block,
+.settings-section .ruleset-editor { display: block; width: 100%; min-width: 0; height: 260px; min-height: 260px; max-height: 360px; margin-top: 6px; padding: 12px 13px !important; resize: vertical; overflow: auto; box-sizing: border-box; border: 1px solid #d6d3cb !important; border-radius: 6px !important; background: #f8f6f0 !important; color: #23313f !important; font: 12px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace !important; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; scrollbar-color: #b8b4aa #eeeae2; }
+.settings-section .ruleset-editor { height: 330px; min-height: 260px; }
 .theme-dark .settings-section .mapping-editor,
-.theme-dark .settings-section .schema-code-block { border-color: #52616a !important; background: #172129 !important; color: #edf3f4 !important; scrollbar-color: #62737c #25343d; }
+.theme-dark .settings-section .schema-code-block,
+.theme-dark .settings-section .ruleset-editor { border-color: #52616a !important; background: #172129 !important; color: #edf3f4 !important; scrollbar-color: #62737c #25343d; }
 .settings-section .mapping-editor:focus,
 .settings-section .schema-code-block:focus { border-color: #a45b3e !important; box-shadow: 0 0 0 3px #a45b3e22; outline: none; }
 .config-log-window { max-height: 112px; border-color: #d6d3cb; background: #f8f6f0; color: #34454d; scrollbar-color: #b8b4aa #eeeae2; }
@@ -469,7 +475,37 @@
 .company-results-table-wrapper { max-height: 520px; overflow-y: auto; overflow-x: auto; }
 .company-results-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 12px; }
 .company-results-table th { position: sticky; top: 0; z-index: 10; background: #fffdf9; }
-.company-delete-btn { padding: 7px 10px; border: 1px solid #a04435; border-radius: 4px; background: transparent; color: #a04435; cursor: pointer; }
+.company-action-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+.company-edit-btn, .company-delete-btn { padding: 7px 10px; border: 1px solid; border-radius: 4px; background: transparent; cursor: pointer; }
+.company-edit-btn { border-color: #3e9c7a; color: #28775b; }
+.company-delete-btn { border-color: #a04435; color: #a04435; }
+.company-edit-btn:hover, .company-edit-btn:focus-visible { background: #e8f7ef; }
+.company-delete-btn:hover, .company-delete-btn:focus-visible { background: #fbecea; }
+.candidate-edit-backdrop { z-index: 100; background: #18252bcc; }
+.candidate-edit-modal { width: min(720px, 100%); max-height: min(760px, calc(100vh - 32px)); overflow: auto; background: #fffdf9; color: #23313f; border: 1px solid #d8d3c8; box-shadow: 0 20px 60px #17212955; }
+.candidate-edit-modal .modal-header { padding: 20px 24px 16px; }
+.candidate-edit-form { padding: 18px 24px 22px; }
+.candidate-edit-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+.candidate-edit-fields label { display: flex; flex-direction: column; gap: 6px; color: #526168; font-size: 11px; font-weight: 700; text-transform: capitalize; }
+.candidate-edit-fields input, .candidate-edit-fields textarea { width: 100%; padding: 9px 10px; border: 1px solid #cfd8d5; border-radius: 4px; background: #fff; color: #24343b; font: inherit; line-height: 1.35; transition: border-color .15s, box-shadow .15s, background .15s; }
+.candidate-edit-fields input:focus, .candidate-edit-fields textarea:focus { outline: none; border-color: #3e9c7a; box-shadow: 0 0 0 3px #3e9c7a2b; }
+.candidate-edit-wide { grid-column: 1 / -1; }
+.candidate-edit-fields textarea { min-height: 96px; resize: vertical; }
+.candidate-edit-form .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; padding: 14px 0 0; border-top: 1px solid #dedbd3; }
+.candidate-edit-form .modal-footer button { min-height: 34px; padding: 7px 14px; border: 1px solid #c7d8d2; border-radius: 4px; background: #fffdf9; color: #34454d; cursor: pointer; }
+.candidate-edit-form .modal-footer button:hover, .candidate-edit-form .modal-footer button:focus-visible { border-color: #a45b3e; color: #a45b3e; }
+.candidate-edit-form .modal-footer button[type="submit"] { border-color: #28775b; background: #28775b; color: #fff; }
+.candidate-edit-form .modal-footer button[type="submit"]:hover, .candidate-edit-form .modal-footer button[type="submit"]:focus-visible { border-color: #227653; background: #227653; color: #fff; }
+.theme-dark .candidate-edit-modal { background: #202c35; color: #e6edf0; border-color: #52616a; }
+.theme-dark .candidate-edit-fields label { color: #aab8bd; }
+.theme-dark .candidate-edit-fields input, .theme-dark .candidate-edit-fields textarea { background: #172129; border-color: #52616a; color: #edf3f4; }
+.theme-dark .candidate-edit-fields input::placeholder, .theme-dark .candidate-edit-fields textarea::placeholder { color: #91a0a6; }
+.theme-dark .candidate-edit-form .modal-footer { border-color: #3a4851; }
+.theme-dark .candidate-edit-form .modal-footer button { background: #172129; border-color: #52616a; color: #edf3f4; }
+.theme-dark .candidate-edit-form .modal-footer button:hover, .theme-dark .candidate-edit-form .modal-footer button:focus-visible { border-color: #d89a78; color: #f0b394; }
+.theme-dark .candidate-edit-form .modal-footer button[type="submit"] { background: #3e9c7a; border-color: #3e9c7a; color: #10251e; }
+.theme-dark .candidate-edit-form .modal-footer button[type="submit"]:hover, .theme-dark .candidate-edit-form .modal-footer button[type="submit"]:focus-visible { background: #62c49b; border-color: #62c49b; }
+@media (max-width: 600px) { .candidate-edit-fields { grid-template-columns: 1fr; } .candidate-edit-wide { grid-column: auto; } .candidate-edit-modal { max-height: calc(100dvh - 16px); } .candidate-edit-modal .modal-header { padding: 18px 16px 14px; } .candidate-edit-form { padding: 16px; } }
 .company-results-table th, .company-results-table td { padding: 9px; border-bottom: 1px solid #ebe7df; text-align: left; vertical-align: top; }
 .company-card { padding: 12px; border: 1px solid #ebe7df; background: #fff; }
 .company-legal-badge { display: inline-block; margin-left: 7px; padding: 2px 7px; border-radius: 999px; background: #e8f1ed; color: #287056; font-size: 10px; font-weight: 700; }
@@ -517,3 +553,4 @@
 .theme-dark .company-evidence-toggle { border: 1px solid #475569; background: #182232; color: #f8fafc; }
 .theme-dark .company-evidence-btn:hover,
 .theme-dark .company-evidence-toggle:hover { background: #334155; border-color: #64748b; color: #ffffff; }
+.candidate-inline-edit { width: 100%; min-width: 80px; box-sizing: border-box; padding: 5px; border: 1px solid #3e9c7a; border-radius: 3px; background: white; }
