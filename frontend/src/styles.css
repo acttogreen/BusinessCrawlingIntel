@@ -89,21 +89,25 @@
 .ingestion-metrics small, .ingestion-project small, .document-row small { display: block; color: #4d5a61; font-size: 11px; font-weight: 500; margin-top: 7px; }
 .theme-dark .ingestion-metrics strong { background: #f1eee7; color: #172129; }
 .theme-dark .ingestion-metrics small { color: #34454d; }
-.ingestion-project-row { display: flex; align-items: stretch; gap: 8px; }
-.ingestion-project-card { display: flex; flex: 1; min-width: 0; gap: 8px; }
-.ingestion-project-row .ingestion-project { flex: 1; min-width: 0; color: #172129; }
+.ingestion-project-row { display: flex; align-items: stretch; gap: 6px; }
+.ingestion-project-card { display: flex; flex: 1; min-width: 0; gap: 6px; }
+.ingestion-project-row .ingestion-project { flex: 1; min-width: 0; min-height: 82px; color: #172129; }
 .project-indicators { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; color: #667279; font-size: 11px; }
 .project-indicators span { display: flex; flex-direction: column; gap: 3px; }
 .project-indicators b { color: #172129; font-size: 16px; }
-.ingestion-project-actions { display: flex; flex-direction: column; gap: 6px; flex: 0 0 138px; width: 138px; }
-.ingestion-open { padding: 8px 10px; border: 1px solid #467da0; border-radius: 4px; background: #eef6fb; color: #245a78; cursor: pointer; font-weight: 700; }
+.ingestion-project-actions { display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 0 0 82px; width: 82px; }
+.ingestion-open { padding: 6px 7px; border: 1px solid #467da0; border-radius: 4px; background: #eef6fb; color: #245a78; cursor: pointer; font-size: 11px; font-weight: 700; }
 .ingestion-open:hover { background: #467da0; color: #fff; }
 .ingestion-project-actions .ingestion-process, .ingestion-project-actions .ingestion-delete { align-self: stretch; width: 100%; box-sizing: border-box; }
 .ingestion-project-actions .ingestion-process { white-space: nowrap; }
 .ingestion-process { flex: 0 0 auto; align-self: stretch; padding: 8px 10px; border: 1px solid #3e9c7a; border-radius: 4px; background: #eef8f3; color: #246b52; cursor: pointer; font-weight: 700; }
 .ingestion-process:hover { background: #3e9c7a; color: #fff; }
 .ingestion-project-description { margin: 7px 0 0; color: #6d777d; font-size: 11px; line-height: 1.4; }
-.ingestion-delete { flex: 0 0 auto; align-self: stretch; padding: 8px 10px; border: 1px solid #b04f3d; border-radius: 4px; background: #fff1ee; color: #9b382b; cursor: pointer; font-weight: 700; }
+.ingestion-delete { flex: 0 0 auto; align-self: stretch; padding: 6px 7px; border: 1px solid #b04f3d; border-radius: 4px; background: #fff1ee; color: #9b382b; cursor: pointer; font-size: 11px; font-weight: 700; }
+.ingestion-list { max-height: none; overflow: hidden; padding-right: 0; }
+.ingestion-project-scroll { max-height: min(62vh, 560px); overflow-y: auto; overflow-x: hidden; padding: 10px 6px 4px 0; border: 1px solid #d6d3cb; border-radius: 6px; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.ingestion-project-scroll::-webkit-scrollbar { width: 7px; }
+.ingestion-project-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: #9aa8ad; }
 .ingestion-delete:hover { background: #b04f3d; color: #fff; }
 .theme-dark .ingestion-project-row .ingestion-project { color: #172129; }
 .theme-dark .ingestion-process { background: #18372d; color: #9de0bd; border-color: #3e9c7a; }
@@ -111,6 +115,12 @@
 .theme-dark .ingestion-delete { background: #321f20; color: #ffb7aa; border-color: #a94e40; }
 .ingestion-body { grid-template-columns: minmax(230px, .85fr) minmax(300px, 1.15fr) minmax(320px, 1.25fr); }
 .ingestion-list, .ingestion-workspace { min-width: 0; }
+.ingestion-list { min-height: 0; max-height: none; overflow: hidden; padding-right: 0; overscroll-behavior: auto; }
+.ingestion-project-scroll { height: 100%; max-height: none; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 12px; border: 1px solid #d6d3cb; border-radius: 6px; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.ingestion-project-row + .ingestion-project-row { margin-top: 10px; }
+.ingestion-project-scroll::-webkit-scrollbar { width: 7px; }
+.ingestion-project-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: #9aa8ad; }
+.theme-dark .ingestion-project-scroll::-webkit-scrollbar-thumb { background: #52616a; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .section-heading h3 { margin: 0; }
 .section-heading input { min-width: 0; width: 100%; }
@@ -129,8 +139,13 @@
 .company-results-full .company-results-table th:nth-child(3) { min-width: 260px; }
 .company-results-full .company-results-table th:nth-child(9) { min-width: 180px; }
 @media (max-width: 980px) { .ingestion-body { grid-template-columns: minmax(220px, 1fr) minmax(280px, 1fr); } .ingestion-form { grid-column: 1; } .ingestion-list { grid-column: 2; } .ingestion-workspace { grid-column: 1 / -1; } }
-@media (max-width: 680px) { .ingestion-body { display: flex; flex-direction: column; } .ingestion-form, .ingestion-list, .ingestion-workspace, .company-results-full { width: 100%; } .section-heading { align-items: stretch; flex-direction: column; } }
+@media (max-width: 680px) { .ingestion-body { display: flex; flex-direction: column; } .ingestion-form, .ingestion-list, .ingestion-workspace, .company-results-full { width: 100%; } .ingestion-list { height: auto; } .ingestion-project-scroll { height: min(360px, 45vh); } .ingestion-project-scroll:has(.ingestion-project-row:nth-child(4)) { height: min(360px, 45vh, 335px); } .section-heading { align-items: stretch; flex-direction: column; } }
 .ingestion-form, .ingestion-list, .ingestion-workspace { display: flex; flex-direction: column; gap: 10px; }
+.ingestion-form, .ingestion-list { align-self: start; }
+.ingestion-form { height: max-content; min-height: 0; }
+.ingestion-list { height: max-content; min-height: 0; overflow: hidden; }
+.ingestion-project-scroll { flex: 0 1 auto; min-height: 0; }
+.ingestion-project-scroll:has(.ingestion-project-row:nth-child(4)) { max-height: 335px; overflow-y: auto; }
 .workspace-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid #d9e2df; border-radius: 8px; background: linear-gradient(135deg, #f8fbfa, #eef6f3); }
 .workspace-header h3 { margin: 0; color: #172129; font-size: 16px; line-height: 1.25; }
 .workspace-header p { margin: 4px 0 0; color: #879397; font-size: 11px; }
