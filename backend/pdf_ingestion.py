@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from backend.administrative_reference import validate_pair
+from backend.ai_curation import load_and_curate
 
 def validate_administrative_pair(province_code: str, regency_code: str, province_name: str = "", regency_name: str = "") -> tuple[str, str]:
     province, region = validate_pair(province_code, regency_code)
@@ -250,16 +251,17 @@ def process(document_id: str) -> None:
         markdown_files = list(folder.glob("*.md"))
         if result.returncode != 0 or not json_files: raise RuntimeError(f"parser exited {result.returncode}; JSON artifact missing")
         parsed = json.loads(json_files[0].read_text(encoding="utf-8"))
-        companies_json, companies_csv = folder / "company_candidates.json", folder / "company_candidates.csv"
-        parser_command = [str(PYTHON), str(ROOT / "backend" / "pdf_tools" / "extract_company_candidates.py"), "--input-json", str(json_files[0]), "--output-json", str(companies_json), "--output-csv", str(companies_csv), "--city", project["region_name"], "--province", project["province_name"]]
+        raw_json, companies_json, companies_csv = folder / "company_candidates_raw.json", folder / "company_candidates.json", folder / "company_candidates.csv"
+        parser_command = [str(PYTHON), str(ROOT / "backend" / "pdf_tools" / "extract_company_candidates.py"), "--input-json", str(json_files[0]), "--output-json", str(raw_json), "--output-csv", str(companies_csv), "--city", project["region_name"], "--province", project["province_name"]]
         if markdown_files: parser_command += ["--input-markdown", str(markdown_files[0])]
         with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Parsing company fields started\n")
         extracted = subprocess.run(parser_command, cwd=str(ROOT), capture_output=True, text=True, timeout=TIMEOUT)
-        candidates = json.loads(companies_json.read_text(encoding="utf-8")) if extracted.returncode == 0 else []
+        candidates = json.loads(raw_json.read_text(encoding="utf-8")) if extracted.returncode == 0 else []
         if not isinstance(candidates, list): raise RuntimeError("company candidates artifact must be a flat array")
-        with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Extracted {len(candidates)} valid companies; JSON artifact generated\n")
+        companies_json.write_text(json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8")
+        with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Extracted {len(candidates)} valid companies; raw and live JSON artifacts generated\n")
         warnings = [x[-2000:] for x in (result.stderr, extracted.stderr) if x]
-        _update(document_id, status="completed" if not warnings else "completed_with_warnings", completed_at=now(), json_artifact=json_files[0].name, markdown_artifact=markdown_files[0].name if markdown_files else None, companies_artifact=companies_json.name, companies_csv_artifact=companies_csv.name, companies_count=len(candidates), processing_log=log_path.name, extraction=extraction_summary(parsed), warnings=warnings)
+        _update(document_id, status="completed" if not warnings else "completed_with_warnings", completed_at=now(), json_artifact=json_files[0].name, markdown_artifact=markdown_files[0].name if markdown_files else None, raw_companies_artifact=raw_json.name, companies_artifact=companies_json.name, companies_csv_artifact=companies_csv.name, companies_count=len(candidates), processing_log=log_path.name, extraction=extraction_summary(parsed), warnings=warnings)
     except Exception as exc:
         log_path.write_text(str(exc), encoding="utf-8"); _update(document_id, status="failed", processing_log=log_path.name, error=str(exc))
 

@@ -66,6 +66,16 @@
 .theme-dark .database-search { background: #172129; color: #edf3f4; border-color: #52616a; }
 .ingestion-modal { width: min(1120px, calc(100vw - 48px)); max-height: calc(100vh - 32px); overflow: auto; background: #fffdf9; color: #23313f; box-shadow: 0 22px 60px rgba(20, 31, 38, .22); }
 .ingestion-modal .modal-header { background: #fffdf9; border-bottom: 1px solid #dedbd3; }
+.ai-connection-status { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; padding: 9px 12px; border: 1px solid #d6d3cb; border-radius: 5px; background: #f8f6f0; }
+.ai-connection-status strong, .ai-connection-status small { display: block; }
+.ai-connection-status strong { font-size: 12px; }
+.ai-connection-status small { margin-top: 3px; color: #667279; font-size: 11px; }
+.ai-status-dot { width: 9px; height: 9px; border-radius: 50%; background: #c35b52; }
+.ai-connection-status.connected { border-color: #9bcdb7; background: #edf8f2; }
+.ai-connection-status.connected .ai-status-dot { background: #3e9c7a; }
+.theme-dark .ai-connection-status { background: #172129; border-color: #52616a; }
+.theme-dark .ai-connection-status.connected { background: #18372d; border-color: #39745d; }
+.theme-dark .ai-connection-status small { color: #aab8bd; }
 .ingestion-body { padding: 22px 26px 26px; display: grid; grid-template-columns: minmax(240px, 280px) minmax(300px, 1fr) minmax(320px, 1.35fr); gap: 18px; align-items: start; }
 .ingestion-metrics { grid-column: 1 / -1; display: flex; gap: 12px; flex-wrap: wrap; }
 .ingestion-metrics strong { min-width: 110px; padding: 14px; background: #f1eee7; color: #172129; font-size: 24px; line-height: 1; }
@@ -188,11 +198,17 @@
 .theme-dark .document-status-failed { background: #321f20; color: #ffb7aa; }
 .theme-dark .extraction-summary { background: #172129; border-color: #3a4851; }
 .theme-dark .ingestion-clear-log { color: #e0a084; border-color: #e0a084; }
-.ingestion-log ol { max-height: 150px; overflow: auto; margin: 10px 0 0; padding-left: 24px; color: #4d5a61; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
-.ingestion-log li { padding: 3px 0; }
+.ingestion-log ol { max-height: 150px; overflow: auto; margin: 10px 0 0; padding-left: 0; list-style: none; color: #4d5a61; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.ingestion-log li { padding: 3px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ingestion-log-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e1d8; }
+.ingestion-log-header h3 { margin: 0; }
+.ingestion-clear-log { padding: 4px 8px; border: 1px solid #71818a; border-radius: 3px; background: transparent; color: #68757a; font-size: 11px; cursor: pointer; }
+.ingestion-clear-log:hover:not(:disabled) { border-color: #a45b3e; color: #a45b3e; }
+.ingestion-clear-log:disabled { cursor: not-allowed; opacity: .5; }
 .ingestion-log-empty { margin: 10px 0 0; color: #737d82; font-size: 12px; }
 .theme-dark .ingestion-modal { background: #202c35; color: #edf3f4; box-shadow: 0 22px 60px rgba(0, 0, 0, .42); }
 .theme-dark .ingestion-modal .modal-header { background: #202c35; border-color: #3a4851; }
+.theme-dark .ai-connection-status strong { color: #edf3f4; }
 .theme-dark .ingestion-log { background: #172129; border-color: #3a4851; }
 .theme-dark .ingestion-log-header { border-color: #3a4851; }
 .theme-dark .ingestion-log ol { color: #c8d4d7; }
@@ -246,6 +262,11 @@
 .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .settings-section input, .settings-section select, .mapping-editor { width: 100%; margin-top: 6px; padding: 10px 11px; border: 1px solid #d6d3cb; border-radius: 4px; background: #f8f6f0; color: #23313f; font: inherit; outline: none; }
 .theme-dark .settings-section input, .theme-dark .settings-section select, .theme-dark .mapping-editor { background: #172129; border-color: #52616a; color: #edf3f4; }
+.confidence-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.confidence-value { color: inherit; font-size: 12px; font-weight: 700; }
+.confidence-slider { display: block; width: 100%; height: 6px; margin-top: 13px !important; padding: 0 !important; border: 0 !important; border-radius: 999px !important; accent-color: #a45b3e; background: #d6d3cb !important; cursor: pointer; }
+.confidence-scale { display: flex; justify-content: space-between; margin-top: 4px; color: #899498; font-size: 10px; }
+.theme-dark .confidence-slider { background: #52616a !important; }
 .token-field { display: flex; gap: 6px; }
 .token-field input { flex: 1; }
 .token-field button { margin-top: 6px; border: 1px solid #d6d3cb; border-radius: 4px; background: #f8f6f0; color: #34454d; cursor: pointer; }

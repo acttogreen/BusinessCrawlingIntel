@@ -34,25 +34,12 @@ if not exist "%FRONTEND%\node_modules" (
     exit /b 1
 )
 
-if "%SBI_PREFERENCES_KEY%"=="" (
-    if exist "%PROJECT_ROOT%preferences\.key" (
-        set /p SBI_PREFERENCES_KEY=<"%PROJECT_ROOT%preferences\.key"
-    ) else (
-        echo Generating encrypted preferences key...
-        if not exist "%PROJECT_ROOT%preferences" mkdir "%PROJECT_ROOT%preferences"
-        for /f "usebackq delims=" %%K in (`%PYTHON% -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`) do set "SBI_PREFERENCES_KEY=%%K"
-        if "!SBI_PREFERENCES_KEY!"=="" (
-            echo [ERROR] Could not generate SBI_PREFERENCES_KEY.
-            pause
-            exit /b 1
-        )
-        >"%PROJECT_ROOT%preferences\.key" echo !SBI_PREFERENCES_KEY!
-        attrib +R "%PROJECT_ROOT%preferences\.key" >nul 2>&1
-    )
+if not exist "%PROJECT_ROOT%.env" (
+    echo [WARNING] .env belum ditemukan. Masukkan token melalui Settings setelah aplikasi berjalan.
 )
 
 echo Starting FastAPI backend at %API_URL%...
-echo Encrypted preferences will be stored in %PROJECT_ROOT%preferences\ai_settings.enc
+echo AI settings will be read from %PROJECT_ROOT%.env
 start "BusinessCrawlingIntel Backend" /D "%PROJECT_ROOT%" cmd /k call "%PYTHON%" backend\run_server.py
 
 echo Starting Vite frontend...

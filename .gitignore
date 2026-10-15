@@ -7,5 +7,9 @@ backend/vendor/
 backend/__pycache__/
 backend/*.log
 *.pyc
+# Local AI credentials
+.env
+.env.*
+!.env.example
 preferences/.key
 preferences/*.enc

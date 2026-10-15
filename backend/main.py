@@ -20,7 +20,31 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.storage import read_activities, read_businesses, read_metadata
-from backend.preferences import preferences_status, write_preferences
+from backend.preferences import preferences_status, read_preferences, write_preferences
+from backend.ai_curation import curation_status, load_and_curate, preference_error
+
+
+app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
+
+
+@app.get("/api/preferences")
+def get_preferences() -> dict[str, Any]:
+    settings = read_preferences()
+    if not settings:
+        return {"configured": False, "provider": "openai", "model": "gpt-4o-mini", "endpoint": "", "batch_size": 5, "confidence": 0.75, "token_configured": False}
+    return {
+        "configured": True,
+        "provider": settings["provider"],
+        "model": settings["model"],
+        "endpoint": settings["endpoint"],
+        "batch_size": settings["batch_size"],
+        "confidence": settings["confidence"],
+        "token_configured": bool(settings.get("token")),
+    }
+
+
+
+from backend.ai_curation import curation_status, load_and_curate, preference_error
 
 
 app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
@@ -28,8 +52,9 @@ app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
 
 class PreferencesInput(BaseModel):
     provider: str = Field(min_length=1, max_length=50)
-    model: str = Field(min_length=1, max_length=100)
-    token: str = Field(min_length=1, max_length=1000)
+    model: str = Field(default="", max_length=200)
+    token: str = Field(default="", max_length=1000)
+    endpoint: str = Field(default="", max_length=500)
     batch_size: int = Field(ge=1, le=200)
     confidence: float = Field(ge=0, le=1)
     mapping: dict[str, Any]
@@ -37,7 +62,8 @@ class PreferencesInput(BaseModel):
 
 class TokenCheckInput(BaseModel):
     provider: str = Field(min_length=1, max_length=50)
-    token: str = Field(min_length=1, max_length=1000)
+    token: str = Field(default="", max_length=1000)
+    endpoint: str = Field(default="", max_length=500)
 
 
 @app.get("/api/preferences/status")
@@ -48,15 +74,18 @@ def preference_status() -> dict[str, Any]:
 @app.post("/api/preferences/check-token")
 def check_preference_token(payload: TokenCheckInput) -> dict[str, Any]:
     provider = payload.provider.lower().strip()
-    base_urls = {"openai": "https://api.openai.com", "anthropic": "https://api.anthropic.com", "custom": "https://api.openai.com"}
-    base_url = base_urls.get(provider)
-    if not base_url:
-        raise HTTPException(status_code=400, detail="Unsupported provider")
-    headers = {"Authorization": f"Bearer {payload.token.strip()}"}
-    if provider == "anthropic":
-        headers = {"x-api-key": payload.token.strip(), "anthropic-version": "2023-06-01"}
+    base_urls = {"openai": "https://api.openai.com/v1", "groq": "https://api.groq.com/openai/v1", "together": "https://api.together.xyz/v1", "ollama": "http://127.0.0.1:11434/v1", "local": "http://127.0.0.1:11434/v1"}
+    base_url = payload.endpoint.strip().rstrip("/") if payload.endpoint.strip() else base_urls.get(provider)
+    if not base_url or provider == "anthropic":
+        raise HTTPException(status_code=400, detail="Provider tidak didukung atau endpoint belum diisi")
+    headers = {"Authorization": f"Bearer {payload.token.strip()}"} if payload.token.strip() else {}
     try:
-        response = requests.get(f"{base_url}/v1/models", headers=headers, timeout=15)
+        for suffix in ("/chat/completions", "/models"):
+            if base_url.lower().endswith(suffix):
+                base_url = base_url[:-len(suffix)].rstrip("/")
+        if not base_url.lower().endswith("/v1") and provider in {"openai", "groq", "together"}:
+            base_url = f"{base_url}/v1"
+        response = requests.get(f"{base_url}/models", headers=headers, timeout=15)
     except requests.RequestException as exc:
         raise HTTPException(status_code=502, detail="Provider tidak dapat dihubungi") from exc
     if response.ok:
@@ -66,13 +95,48 @@ def check_preference_token(payload: TokenCheckInput) -> dict[str, Any]:
     return {"connected": False, "provider": provider, "message": f"Provider merespons HTTP {response.status_code}"}
 
 
+@app.get("/api/preferences/curation-status")
+def preference_curation_status() -> dict[str, Any]:
+    error = preference_error()
+    if error:
+        return {"connected": False, "configured": False, "message": error}
+    try:
+        return curation_status()
+    except requests.RequestException:
+        return {"connected": False, "configured": True, "message": "Provider OpenAI tidak dapat dihubungi."}
+    except RuntimeError as exc:
+        return {"connected": False, "configured": True, "message": str(exc)}
+
+
 @app.post("/api/preferences")
 def save_preferences(payload: PreferencesInput) -> dict[str, Any]:
+    settings = payload.model_dump()
+    settings["provider"] = settings["provider"].strip().lower()
+    settings["endpoint"] = settings["endpoint"].strip().rstrip("/")
+    settings["model"] = settings["model"].strip()
+    if not settings["model"]:
+        if not settings["endpoint"]:
+            raise HTTPException(status_code=422, detail="Endpoint wajib diisi jika model dikosongkan")
+        base_url = settings["endpoint"]
+        for suffix in ("/chat/completions", "/models"):
+            if base_url.lower().endswith(suffix):
+                base_url = base_url[:-len(suffix)].rstrip("/")
+        try:
+            headers = {"Authorization": f"Bearer {settings['token'].strip()}"} if settings.get("token", "").strip() else {}
+            response = requests.get(f"{base_url}/models", headers=headers, timeout=15)
+            response.raise_for_status()
+            models = response.json().get("data", [])
+            model_ids = [item.get("id") for item in models if isinstance(item, dict) and str(item.get("id", "")).strip()]
+        except (requests.RequestException, ValueError, TypeError) as exc:
+            raise HTTPException(status_code=502, detail="Model kosong dan daftar model 9Router tidak dapat dibaca") from exc
+        if not model_ids:
+            raise HTTPException(status_code=502, detail="Model kosong dan 9Router tidak mengembalikan model tersedia")
+        settings["model"] = model_ids[0]
     try:
-        write_preferences(payload.model_dump())
+        write_preferences(settings)
     except RuntimeError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
-    return {"saved": True, **preferences_status()}
+    return {"saved": True, "model": settings["model"], **preferences_status()}
 
 
 @app.post("/api/refresh")
@@ -374,6 +438,44 @@ async def ingestion_upload(project_id: str, files: list[UploadFile] = File(...))
     return {"documents": uploaded}
 
 
+@app.post("/api/ingestion/projects/{project_id}/curate")
+def ingestion_curate_project(project_id: str) -> dict[str, Any]:
+    project = get_project(project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    state = read_state()
+    documents = [d for d in state["documents"] if d["project_id"] == project_id and d.get("status") in {"completed", "completed_with_warnings"}]
+    if not documents:
+        raise HTTPException(422, "No completed PDF is ready for AI curation")
+    results = []
+    for document in documents:
+        folder = document_path(project, document["id"])
+        try:
+            raw_path = folder / (document.get("raw_companies_artifact") or "company_candidates_raw.json")
+            candidates_path = folder / "company_candidates.json"
+            if not raw_path.is_file():
+                raw_path = candidates_path
+            summary = load_and_curate(raw_path, candidates_path)
+            curated_candidates = json.loads(candidates_path.read_text(encoding="utf-8"))
+            csv_path = folder / "company_candidates.csv"
+            fields = list(curated_candidates[0].keys()) if curated_candidates else ["company_name", "legal_entity", "address", "district", "city", "province", "business_sector", "source_url", "evidence", "investment_type", "phone_number"]
+            with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+                writer.writeheader()
+                writer.writerows(curated_candidates)
+            document["companies_artifact"] = "company_candidates.json"
+            document["curation_artifact"] = "company_candidates.json"
+            document["companies_count"] = summary["accepted"]
+            document["curation"] = summary
+            results.append({"document_id": document["id"], **summary, "artifact": "company_candidates.json"})
+        except (RuntimeError, OSError, ValueError, KeyError) as exc:
+            detail = str(exc)
+            status_code = 429 if "HTTP 429" in detail else 502
+            raise HTTPException(status_code, detail) from exc
+    write_state(state)
+    return {"status": "curated", "documents": results}
+
+
 @app.post("/api/ingestion/projects/{project_id}/process")
 def ingestion_process_project(project_id: str) -> dict[str, Any]:
     project = get_project(project_id)
@@ -443,11 +545,11 @@ def ingestion_delete_company(document_id: str, company_index: int) -> dict[str, 
 @app.get("/api/ingestion/documents/{document_id}/artifact/{artifact}")
 def ingestion_artifact(document_id: str, artifact: str) -> Response:
     document = get_document(document_id); project = get_project(document["project_id"]) if document else None
-    allowed = {"original": "original.pdf", "json": document.get("json_artifact") if document else None, "markdown": document.get("markdown_artifact") if document else None, "log": document.get("processing_log") if document else None, "companies": document.get("companies_artifact") if document else None, "companies-csv": document.get("companies_csv_artifact") if document else None}
+    allowed = {"original": "original.pdf", "json": document.get("json_artifact") if document else None, "markdown": document.get("markdown_artifact") if document else None, "log": document.get("processing_log") if document else None, "companies-raw": document.get("raw_companies_artifact") if document else None, "companies": document.get("companies_artifact") if document else None, "companies-curated": document.get("curation_artifact") if document else None, "companies-csv": document.get("companies_csv_artifact") if document else None}
     if not document or not project or artifact not in allowed or not allowed[artifact]: raise HTTPException(404, "Artifact not found")
     path = document_path(project, document_id) / allowed[artifact]
     if not path.is_file(): raise HTTPException(404, "Artifact not found")
-    media = "application/pdf" if artifact == "original" else "application/json" if artifact in {"json", "companies"} else "text/csv" if artifact == "companies-csv" else "text/plain"
+    media = "application/pdf" if artifact == "original" else "application/json" if artifact in {"json", "companies-raw", "companies", "companies-curated"} else "text/csv" if artifact == "companies-csv" else "text/plain"
     return Response(content=path.read_bytes(), media_type=media, headers={"Content-Disposition": f'attachment; filename="{path.name}"'})
 
 

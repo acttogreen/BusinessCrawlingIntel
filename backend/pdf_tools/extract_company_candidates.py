@@ -70,10 +70,13 @@ def extract(input_json, input_markdown, output_json, output_csv, source_url, pro
         district = next((d for d in DISTRICTS if re.search(r"\b" + re.escape(d) + r"\b", combined, re.I)), "")
         phone_match = next((re.search(r"(?:\\+62|0)(?:[ -]?\\d){7,14}", x) for x in context if re.search(r"(?:\\+62|0)(?:[ -]?\\d){7,14}", x)), None)
         sector = next((x for x in context if re.search(r"\bKBLI\b|\(\d{2}\)", x, re.I)), "")
-        seen.add(name.casefold()); records.append(dict(zip(FIELDS, [name, entity, address, district, city, province, sector, source_url, " ".join([raw] + context), investment_type, phone_match.group(0) if phone_match else ""])))
+        seen.add(name.casefold())
+        evidence = " ".join([raw] + context)
+        extracted = dict(zip(FIELDS, [name, entity, address, district, city, province, sector, source_url, evidence, investment_type, phone_match.group(0) if phone_match else ""]))
+        records.append({**extracted, "extracted_data": dict(extracted), "raw_data": {"source_index": index, "source_text": evidence, "source_line": raw, "context_lines": context}})
     Path(output_json).parent.mkdir(parents=True, exist_ok=True); Path(output_json).write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
     with Path(output_csv).open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=FIELDS); writer.writeheader(); writer.writerows(records)
+        writer = csv.DictWriter(handle, fieldnames=FIELDS, extrasaction="ignore"); writer.writeheader(); writer.writerows(records)
     return records
 
 def main():
