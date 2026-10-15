@@ -14,7 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --no-cache-dir -r /app/backend/requirements.txt
-COPY backend/__init__.py backend/main.py backend/storage.py /app/backend/
+COPY backend/__init__.py backend/main.py backend/storage.py backend/preferences.py /app/backend/
 COPY backend/data/ /app/backend/data/
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 

@@ -4,6 +4,8 @@ import json
 import zipfile
 from datetime import datetime, timedelta, timezone
 
+import requests
+
 from pathlib import Path
 
 from backend.administrative_reference import METADATA, PROVINCES, REGIONS, province, region, province_payload, region_payload, sync_reference
@@ -18,9 +20,59 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.storage import read_activities, read_businesses, read_metadata
+from backend.preferences import preferences_status, write_preferences
 
 
 app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
+
+
+class PreferencesInput(BaseModel):
+    provider: str = Field(min_length=1, max_length=50)
+    model: str = Field(min_length=1, max_length=100)
+    token: str = Field(min_length=1, max_length=1000)
+    batch_size: int = Field(ge=1, le=200)
+    confidence: float = Field(ge=0, le=1)
+    mapping: dict[str, Any]
+
+
+class TokenCheckInput(BaseModel):
+    provider: str = Field(min_length=1, max_length=50)
+    token: str = Field(min_length=1, max_length=1000)
+
+
+@app.get("/api/preferences/status")
+def preference_status() -> dict[str, Any]:
+    return preferences_status()
+
+
+@app.post("/api/preferences/check-token")
+def check_preference_token(payload: TokenCheckInput) -> dict[str, Any]:
+    provider = payload.provider.lower().strip()
+    base_urls = {"openai": "https://api.openai.com", "anthropic": "https://api.anthropic.com", "custom": "https://api.openai.com"}
+    base_url = base_urls.get(provider)
+    if not base_url:
+        raise HTTPException(status_code=400, detail="Unsupported provider")
+    headers = {"Authorization": f"Bearer {payload.token.strip()}"}
+    if provider == "anthropic":
+        headers = {"x-api-key": payload.token.strip(), "anthropic-version": "2023-06-01"}
+    try:
+        response = requests.get(f"{base_url}/v1/models", headers=headers, timeout=15)
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=502, detail="Provider tidak dapat dihubungi") from exc
+    if response.ok:
+        return {"connected": True, "provider": provider, "message": "Token valid dan provider dapat dihubungi"}
+    if response.status_code in {401, 403}:
+        return {"connected": False, "provider": provider, "message": "Token ditolak oleh provider"}
+    return {"connected": False, "provider": provider, "message": f"Provider merespons HTTP {response.status_code}"}
+
+
+@app.post("/api/preferences")
+def save_preferences(payload: PreferencesInput) -> dict[str, Any]:
+    try:
+        write_preferences(payload.model_dump())
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    return {"saved": True, **preferences_status()}
 
 
 @app.post("/api/refresh")

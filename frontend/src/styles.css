@@ -235,6 +235,57 @@
 .theme-dark .credits { border-color: #3a4851; }
 .analytics-modal { width: min(1080px, 100%); max-height: min(820px, calc(100vh - 56px)); overflow: auto; background: #fffdf9; color: #23313f; border: 1px solid #d8d3c8; box-shadow: 0 20px 60px #17212955; }
 .theme-dark .analytics-modal { background: #202c35; color: #e6edf0; border-color: #52616a; }
+.settings-modal { width: min(760px, 100%); max-height: min(860px, calc(100vh - 56px)); overflow: auto; background: #fffdf9; color: #23313f; border: 1px solid #d8d3c8; box-shadow: 0 20px 60px #17212955; }
+.theme-dark .settings-modal { background: #202c35; color: #e6edf0; border-color: #52616a; }
+.settings-body { padding: 22px 26px; display: grid; gap: 18px; }
+.settings-section { padding-bottom: 18px; border-bottom: 1px solid #e5e1d8; }
+.settings-section:last-child { border-bottom: 0; padding-bottom: 0; }
+.settings-section h3 { margin: 0 0 5px; font-size: 14px; }
+.settings-section > p { margin: 0 0 13px; color: #7d888c; font-size: 11px; line-height: 1.45; }
+.settings-section label { display: block; margin-top: 12px; color: #6d777d; font-size: 11px; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.settings-section input, .settings-section select, .mapping-editor { width: 100%; margin-top: 6px; padding: 10px 11px; border: 1px solid #d6d3cb; border-radius: 4px; background: #f8f6f0; color: #23313f; font: inherit; outline: none; }
+.theme-dark .settings-section input, .theme-dark .settings-section select, .theme-dark .mapping-editor { background: #172129; border-color: #52616a; color: #edf3f4; }
+.token-field { display: flex; gap: 6px; }
+.token-field input { flex: 1; }
+.token-field button { margin-top: 6px; border: 1px solid #d6d3cb; border-radius: 4px; background: #f8f6f0; color: #34454d; cursor: pointer; }
+.mapping-editor { resize: vertical; min-height: 180px; font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.settings-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 26px; border-top: 1px solid #dedbd3; font-size: 11px; }
+.settings-footer > div { display: flex; gap: 8px; }
+.settings-footer button { padding: 9px 12px; border-radius: 4px; cursor: pointer; }
+.settings-cancel { border: 1px solid #d6d3cb; background: transparent; color: inherit; }
+.settings-save { border: 1px solid #a45b3e; background: #a45b3e; color: #fff; }
+.settings-success { color: #3e9c7a; }.settings-error { color: #b04f3d; }
+.theme-dark .settings-footer { border-color: #3a4851; }
+@media (max-width: 760px) { .settings-modal { max-height: calc(100vh - 20px); } .settings-body { padding: 18px 16px; } .settings-grid { grid-template-columns: 1fr; gap: 0; } .settings-footer { align-items: stretch; flex-direction: column; padding: 12px 16px; } .settings-footer > div { justify-content: flex-end; } }
+
+.settings-action-button { display: inline-flex; align-items: center; justify-content: center; width: auto; min-height: 36px; margin-top: 12px; padding: 9px 13px; border: 1px solid #a45b3e; border-radius: 4px; background: #a45b3e; color: #fff; font-size: 12px; font-weight: 650; line-height: 1.2; cursor: pointer; transition: background .15s ease, border-color .15s ease, opacity .15s ease; }
+.settings-action-button:hover:not(:disabled) { border-color: #87472f; background: #87472f; }.settings-action-button:disabled { cursor: wait; opacity: .65; }.theme-dark .settings-action-button { border-color: #c06b4b; background: #a45b3e; color: #fff; }.theme-dark .settings-action-button:hover:not(:disabled) { border-color: #d17a58; background: #b86648; }
+
+.config-log-window { max-height: 112px; overflow-y: auto; margin-top: 10px; padding: 10px 12px; border: 1px solid #253650; border-radius: 7px; background: #0f172a; color: #cbd5e1; font: 11px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; scrollbar-color: #475569 #1e293b; }
+.config-log-entry-info, .config-log-entry-success, .config-log-entry-error { white-space: nowrap; }
+.config-log-entry-info { color: #cbd5e1; }.config-log-entry-success { color: #86efac; }.config-log-entry-error { color: #fca5a5; }
+.config-log-placeholder { color: #64748b; }.config-log-clear { margin-top: 7px; padding: 5px 9px; border: 1px solid #d6d3cb; border-radius: 4px; background: transparent; color: #68757a; font-size: 11px; cursor: pointer; }.config-log-clear:disabled { cursor: not-allowed; opacity: .5; }
+.schema-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }.schema-copy-button { flex: 0 0 auto; padding: 6px 9px; border: 1px solid #475569; border-radius: 5px; background: #334155; color: #f8fafc; font-size: 11px; cursor: pointer; }.schema-copy-button:hover { background: #475569; }
+.schema-code-block { display: block; max-height: 330px; min-height: 180px; resize: vertical; overflow: auto; padding: 13px 14px !important; border-color: #334155 !important; border-radius: 7px !important; background: #1e293b !important; color: #f8fafc !important; font: 12px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace !important; tab-size: 2; scrollbar-color: #64748b #1e293b; }
+.settings-section input:focus, .settings-section select:focus, .schema-code-block:focus { border-color: #a45b3e; box-shadow: 0 0 0 3px #a45b3e22; }
+.theme-dark .config-log-clear { border-color: #52616a; color: #aab8bd; }.theme-dark .schema-copy-button { border-color: #64748b; background: #475569; }
+@media (max-width: 520px) { .schema-heading { flex-direction: column; }.schema-copy-button { align-self: flex-start; }.config-log-entry-info, .config-log-entry-success, .config-log-entry-error { white-space: normal; overflow-wrap: anywhere; } }
+
+/* Configuration editors and status console stay aligned in both themes. */
+.settings-section .mapping-editor,
+.settings-section .schema-code-block { display: block; width: 100%; min-width: 0; height: 260px; min-height: 260px; max-height: 260px; margin-top: 6px; padding: 12px 13px !important; resize: vertical; overflow: auto; box-sizing: border-box; border: 1px solid #d6d3cb !important; border-radius: 6px !important; background: #f8f6f0 !important; color: #23313f !important; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace !important; white-space: pre; tab-size: 2; scrollbar-color: #b8b4aa #eeeae2; }
+.theme-dark .settings-section .mapping-editor,
+.theme-dark .settings-section .schema-code-block { border-color: #52616a !important; background: #172129 !important; color: #edf3f4 !important; scrollbar-color: #62737c #25343d; }
+.settings-section .mapping-editor:focus,
+.settings-section .schema-code-block:focus { border-color: #a45b3e !important; box-shadow: 0 0 0 3px #a45b3e22; outline: none; }
+.config-log-window { max-height: 112px; border-color: #d6d3cb; background: #f8f6f0; color: #34454d; scrollbar-color: #b8b4aa #eeeae2; }
+.config-log-entry-info { color: #68757a; }.config-log-entry-success { color: #27805f; }.config-log-entry-error { color: #b04f3d; }.config-log-placeholder { color: #8a9295; }
+.theme-dark .config-log-window { border-color: #52616a; background: #172129; color: #d7e0e2; scrollbar-color: #62737c #25343d; }
+.theme-dark .config-log-entry-info { color: #c2d0d4; }.theme-dark .config-log-entry-success { color: #86efac; }.theme-dark .config-log-entry-error { color: #fca5a5; }.theme-dark .config-log-placeholder { color: #82939a; }
+.config-log-clear { border-color: #d6d3cb; background: transparent; color: #68757a; }.config-log-clear:hover:not(:disabled) { border-color: #a45b3e; color: #a45b3e; }.theme-dark .config-log-clear { border-color: #52616a; color: #aab8bd; }
+.schema-copy-button { border-color: #d6d3cb; background: #f8f6f0; color: #34454d; }.schema-copy-button:hover { border-color: #a45b3e; background: #f1ede5; color: #a45b3e; }.theme-dark .schema-copy-button { border-color: #52616a; background: #25343d; color: #edf3f4; }.theme-dark .schema-copy-button:hover { border-color: #82939a; background: #34434c; color: #fff; }
+@media (max-width: 760px) { .settings-section .mapping-editor, .settings-section .schema-code-block { height: 220px; min-height: 220px; max-height: 220px; } }
 .analytics-content { padding: 22px 26px 28px; }
 .analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .analytics-chart { min-width: 0; }
