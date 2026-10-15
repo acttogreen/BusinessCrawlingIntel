@@ -1,4 +1,4 @@
-import csv
+﻿import csv
 import io
 import json
 import zipfile
@@ -396,6 +396,25 @@ def administrative_region(region_code: str) -> dict[str, Any]:
     return {"data": region_payload(item), "metadata": METADATA}
 
 
+@app.get("/api/administrative/regions/{region_code}/districts")
+def administrative_districts(region_code: str) -> dict[str, Any]:
+    if not region(region_code):
+        raise HTTPException(404, "Kode kabupaten/kota tidak ditemukan")
+    try:
+        response = requests.get(f"https://www.emsifa.com/api-wilayah-indonesia/v2/districts/{region_code}.json", timeout=(5, 20))
+        response.raise_for_status()
+        payload = response.json()
+        items = payload.get("data") if isinstance(payload, dict) else None
+        if not isinstance(items, list):
+            raise ValueError("format data kecamatan tidak valid")
+        districts = [{"id": item["id"].strip(), "name": item["name"].strip(), "region_id": region_code} for item in items if isinstance(item, dict) and isinstance(item.get("id"), str) and item["id"].strip() and isinstance(item.get("name"), str) and item["name"].strip()]
+        if not districts:
+            raise ValueError("data kecamatan kosong")
+        return {"data": districts, "metadata": METADATA}
+    except (requests.RequestException, ValueError, KeyError) as exc:
+        raise HTTPException(502, f"Data kecamatan tidak tersedia: {exc}") from exc
+
+
 @app.get("/api/ingestion/projects")
 def ingestion_projects() -> dict[str, Any]:
     state = read_state()
@@ -590,3 +609,4 @@ def health() -> dict[str, str]:
 FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 if FRONTEND_DIST.is_dir():
     app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
+
