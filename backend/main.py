@@ -1,11 +1,18 @@
 import csv
 import io
+import json
 import zipfile
 from datetime import datetime, timedelta, timezone
+
 from pathlib import Path
+
+from backend.administrative_reference import METADATA, PROVINCES, REGIONS, province, region, province_payload, region_payload, sync_reference
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from pydantic import BaseModel, Field
+
+from backend.pdf_ingestion import add_document, create_project, delete_document, delete_project, get_document, get_project, project_path, public_document, queue_document, read_state, write_state, document_path
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -216,6 +223,180 @@ def statistics() -> dict[str, Any]:
 @app.get("/api/metadata")
 def metadata() -> dict[str, Any]:
     return read_metadata()
+
+
+class IngestionProjectInput(BaseModel):
+    province_code: str = Field(min_length=1, max_length=3)
+    province_name: str = Field(min_length=1, max_length=200)
+    regency_code: str = Field(min_length=4, max_length=12)
+    regency_name: str = Field(min_length=1, max_length=200)
+    source_year: int | None = Field(default=None, ge=1900, le=2200)
+    description: str | None = Field(default=None, max_length=2000)
+    notes: str | None = Field(default=None, max_length=2000)
+
+
+@app.get("/api/administrative/metadata")
+def administrative_metadata() -> dict[str, Any]:
+    return METADATA
+
+@app.post("/api/administrative/sync")
+def administrative_sync() -> dict[str, Any]:
+    try:
+        snapshot = sync_reference()
+        return {"status": "success", "metadata": snapshot["metadata"]}
+    except Exception as exc:
+        raise HTTPException(502, f"Sinkronisasi wilayah gagal: {exc}") from exc
+
+@app.get("/api/administrative/provinces")
+def administrative_provinces() -> dict[str, Any]:
+    return {"data": [province_payload(item) for item in PROVINCES], "metadata": METADATA}
+
+@app.get("/api/administrative/provinces/{province_code}/regions")
+def administrative_regions(province_code: str) -> dict[str, Any]:
+    if not province(province_code):
+        raise HTTPException(404, "Kode provinsi tidak ditemukan")
+    return {"data": [region_payload(item) for item in REGIONS if item.province_id == province_code], "metadata": METADATA}
+
+@app.get("/api/administrative/provinces/{province_code}")
+def administrative_province(province_code: str) -> dict[str, Any]:
+    item = province(province_code)
+    if not item:
+        raise HTTPException(404, "Kode provinsi tidak ditemukan")
+    return {"data": province_payload(item), "metadata": METADATA}
+
+@app.get("/api/administrative/regions/{region_code}")
+def administrative_region(region_code: str) -> dict[str, Any]:
+    item = region(region_code)
+    if not item:
+        raise HTTPException(404, "Kode kabupaten/kota tidak ditemukan")
+    return {"data": region_payload(item), "metadata": METADATA}
+
+
+@app.get("/api/ingestion/projects")
+def ingestion_projects() -> dict[str, Any]:
+    state = read_state()
+    projects = []
+    for project in state["projects"]:
+        project = dict(project); project["documents"] = [public_document(d) for d in state["documents"] if d["project_id"] == project["id"]]; projects.append(project)
+    return {"projects": projects, "documents": len(state["documents"])}
+
+
+@app.post("/api/ingestion/projects")
+def ingestion_create_project(payload: IngestionProjectInput) -> dict[str, Any]:
+    try: return create_project(payload.model_dump())
+    except ValueError as exc: raise HTTPException(422, str(exc)) from exc
+
+
+@app.delete("/api/ingestion/projects/{project_id}")
+def ingestion_delete_project(project_id: str) -> dict[str, str]:
+    if not delete_project(project_id):
+        raise HTTPException(404, "Project not found")
+    return {"status": "deleted", "project_id": project_id}
+
+
+@app.delete("/api/ingestion/documents/{document_id}")
+def ingestion_delete_document(document_id: str) -> dict[str, str]:
+    try:
+        document = delete_document(document_id)
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    if not document:
+        raise HTTPException(404, "Document not found")
+    return {"status": "deleted", "document_id": document_id}
+
+
+@app.get("/api/ingestion/projects/{project_id}")
+def ingestion_project(project_id: str) -> dict[str, Any]:
+    project = get_project(project_id)
+    if not project: raise HTTPException(404, "Project not found")
+    state = read_state(); return {**project, "documents": [public_document(d) for d in state["documents"] if d["project_id"] == project_id]}
+
+
+@app.post("/api/ingestion/projects/{project_id}/documents")
+async def ingestion_upload(project_id: str, files: list[UploadFile] = File(...)) -> dict[str, Any]:
+    if not get_project(project_id): raise HTTPException(404, "Project not found")
+    uploaded = []
+    for file in files:
+        try: uploaded.append(add_document(project_id, file.filename or "upload.pdf", await file.read()))
+        except (ValueError, KeyError) as exc: raise HTTPException(422, str(exc)) from exc
+    return {"documents": uploaded}
+
+
+@app.post("/api/ingestion/projects/{project_id}/process")
+def ingestion_process_project(project_id: str) -> dict[str, Any]:
+    project = get_project(project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    state = read_state()
+    documents = [d for d in state["documents"] if d["project_id"] == project_id and d["status"] in {"uploaded", "failed"}]
+    if not documents:
+        raise HTTPException(422, "No uploaded PDF is ready to process")
+    for document in documents:
+        queue_document(document["id"])
+    return {"status": "queued", "documents": len(documents)}
+
+
+@app.post("/api/ingestion/documents/{document_id}/retry")
+def ingestion_retry(document_id: str) -> dict[str, Any]:
+    document = get_document(document_id)
+    if not document: raise HTTPException(404, "Document not found")
+    queue_document(document_id); return public_document(get_document(document_id))
+
+
+@app.get("/api/ingestion/documents/{document_id}")
+def ingestion_document(document_id: str) -> dict[str, Any]:
+    document = get_document(document_id)
+    if not document: raise HTTPException(404, "Document not found")
+    return public_document(document)
+
+
+@app.get("/api/ingestion/delete-route-status")
+def ingestion_delete_route_status() -> dict[str, Any]:
+    return {"delete_company_route": True, "route": "/api/ingestion/documents/{document_id}/companies/{company_index}"}
+
+
+@app.get("/api/ingestion/documents/{document_id}/companies")
+def ingestion_companies(document_id: str) -> list[dict[str, Any]]:
+    document = get_document(document_id); project = get_project(document["project_id"]) if document else None
+    if not document or not project or document.get("status") not in {"completed", "completed_with_warnings"}: return []
+    path = document_path(project, document_id) / (document.get("companies_artifact") or "company_candidates.json")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        return payload if isinstance(payload, list) else []
+    except (OSError, json.JSONDecodeError): return []
+
+
+@app.delete("/api/ingestion/documents/{document_id}/companies/{company_index}")
+def ingestion_delete_company(document_id: str, company_index: int) -> dict[str, Any]:
+    document = get_document(document_id); project = get_project(document["project_id"]) if document else None
+    if not document or not project: raise HTTPException(404, "Document not found")
+    folder = document_path(project, document_id)
+    json_path = folder / (document.get("companies_artifact") or "company_candidates.json")
+    csv_path = folder / (document.get("companies_csv_artifact") or "company_candidates.csv")
+    try: candidates = json.loads(json_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError): raise HTTPException(404, "Candidates artifact not found")
+    if not isinstance(candidates, list) or company_index < 0 or company_index >= len(candidates): raise HTTPException(404, "Candidate not found")
+    candidates.pop(company_index)
+    json_path.write_text(json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8")
+    fields = list(candidates[0].keys()) if candidates else ["company_name", "legal_entity", "address", "district", "city", "province", "business_sector", "source_url", "evidence", "investment_type", "phone_number"]
+    with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows(candidates)
+    state = read_state()
+    for item in state.get("documents", []):
+        if item.get("id") == document_id: item["companies_count"] = len(candidates)
+    write_state(state)
+    return {"deleted": True, "companies_count": len(candidates)}
+
+
+@app.get("/api/ingestion/documents/{document_id}/artifact/{artifact}")
+def ingestion_artifact(document_id: str, artifact: str) -> Response:
+    document = get_document(document_id); project = get_project(document["project_id"]) if document else None
+    allowed = {"original": "original.pdf", "json": document.get("json_artifact") if document else None, "markdown": document.get("markdown_artifact") if document else None, "log": document.get("processing_log") if document else None, "companies": document.get("companies_artifact") if document else None, "companies-csv": document.get("companies_csv_artifact") if document else None}
+    if not document or not project or artifact not in allowed or not allowed[artifact]: raise HTTPException(404, "Artifact not found")
+    path = document_path(project, document_id) / allowed[artifact]
+    if not path.is_file(): raise HTTPException(404, "Artifact not found")
+    media = "application/pdf" if artifact == "original" else "application/json" if artifact in {"json", "companies"} else "text/csv" if artifact == "companies-csv" else "text/plain"
+    return Response(content=path.read_bytes(), media_type=media, headers={"Content-Disposition": f'attachment; filename="{path.name}"'})
 
 
 @app.get("/health")

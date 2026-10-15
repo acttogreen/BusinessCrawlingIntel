@@ -1,0 +1,3 @@
+[console_scripts]
+opendataloader-pdf = opendataloader_pdf.wrapper:main
+opendataloader-pdf-hybrid = opendataloader_pdf.hybrid_server:main

@@ -1,0 +1,48 @@
+{
+  "projects": [
+    {
+      "id": "project_b3cb0ecac4274ab78deecf55d6a0cc84",
+      "province_code": "33",
+      "province_name": "Jawa Tengah",
+      "regency_code": "33.24",
+      "regency_name": "Kabupaten Kendal",
+      "region_name": "Kabupaten Kendal",
+      "region_type": "kabupaten",
+      "source_year": null,
+      "source_category": null,
+      "description": null,
+      "notes": null,
+      "status": "active",
+      "created_at": "2026-10-15T08:07:22.658842+00:00",
+      "updated_at": "2026-10-15T08:07:22.658842+00:00"
+    }
+  ],
+  "documents": [
+    {
+      "id": "document_352963a57fc746318408f3da56f94e5e",
+      "project_id": "project_b3cb0ecac4274ab78deecf55d6a0cc84",
+      "province_name": "Jawa Tengah",
+      "region_name": "Kabupaten Kendal",
+      "original_filename": "direktori-industri-manufaktur-kabupaten-kendal-2025.pdf",
+      "sha256": "7cb87ea5fad8d0ac14d5123517965c35c1fa507448f902dcf4d8870aebe9e48d",
+      "status": "completed",
+      "uploaded_at": "2026-10-15T09:45:59.763142+00:00",
+      "started_at": "2026-10-15T09:46:03.712944+00:00",
+      "completed_at": "2026-10-15T09:46:16.331554+00:00",
+      "parser": "opendataloader-pdf 2.5.13",
+      "json_artifact": "original.json",
+      "markdown_artifact": "original.md",
+      "processing_log": "processing.log",
+      "warnings": [],
+      "error": null,
+      "companies_artifact": "company_candidates.json",
+      "companies_csv_artifact": "company_candidates.csv",
+      "companies_count": 96,
+      "extraction": {
+        "companies": 0,
+        "elements": 0,
+        "characters": 0
+      }
+    }
+  ]
+}
