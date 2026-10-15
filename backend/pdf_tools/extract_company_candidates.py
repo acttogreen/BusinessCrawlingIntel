@@ -1,4 +1,4 @@
-﻿"""Defensive PDF layout/Markdown company candidate extractor."""
+"""Defensive PDF layout/Markdown company candidate extractor."""
 import argparse
 import csv
 import json
