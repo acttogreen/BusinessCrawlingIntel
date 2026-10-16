@@ -1,19 +1,11 @@
-"""Generate the Business_database_5.0-first OSM mapping JSON.
+"""Legacy mapping builder retained as a guarded compatibility command.
 
-Usage: python -m backend.scripts.build_business_mapping
+Regional datasets must be generated through the ingestion project workflow.
 """
-
-import json
-
-from backend.mapping import MAPPING_PATH, OSM_PATH, REGISTRY_PATH, build_mapping
 
 
 def main() -> None:
-    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
-    osm_records = json.loads(OSM_PATH.read_text(encoding="utf-8"))
-    mapping = build_mapping(registry, osm_records)
-    MAPPING_PATH.write_text(json.dumps(mapping, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Mapped {mapping['summary']['matched']}/{mapping['summary']['total']} registry records")
+    raise SystemExit("Legacy pilot mapping generation is disabled; use the regional ingestion workflow")
 
 
 if __name__ == "__main__":

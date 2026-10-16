@@ -41,9 +41,9 @@ def build_mapping_for_sources(registry: list[dict[str, Any]], osm_records: list[
 
 
 DATA_DIR = Path(__file__).parent / "data"
-REGISTRY_PATH = DATA_DIR / "Business_database_5.0.json"
+# Legacy pilot files are archived under backend/old_data and are not runtime sources.
+# Regional project mappings are the only supported business database source.
 OSM_PATH = DATA_DIR / "businesses.json"
-MAPPING_PATH = DATA_DIR / "business_database_mapping.json"
 
 
 def _normalise(value: Any) -> str:
@@ -150,7 +150,7 @@ def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: 
         "schema_version": "1.0",
         "primary_source": registry_name or "candidate_registry",
         "mapping_source": "openstreetmap",
-        "source_files": {"registry": REGISTRY_PATH.name, "osm": OSM_PATH.name},
+        "source_files": {"registry": registry_name or "project_candidates", "osm": OSM_PATH.name},
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": {"total": len(mapped), "matched": matched, "unmatched": len(mapped) - matched},
         "businesses": mapped,
@@ -158,9 +158,7 @@ def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: 
 
 
 def read_mapping() -> dict[str, Any]:
-    if not MAPPING_PATH.exists():
-        return build_mapping(json.loads(REGISTRY_PATH.read_text(encoding="utf-8")), json.loads(OSM_PATH.read_text(encoding="utf-8")))
-    return json.loads(MAPPING_PATH.read_text(encoding="utf-8"))
+    raise RuntimeError("No default business mapping is configured; select a regional project dataset")
 
 
 def mapped_businesses(mapping: dict[str, Any] | None = None) -> list[dict[str, Any]]:
@@ -181,7 +179,7 @@ def mapped_businesses(mapping: dict[str, Any] | None = None) -> list[dict[str, A
             "location": location,
             "address": {"addr:suburb": registry.get("district"), "addr:city": registry.get("city"), "display": registry.get("address")},
             "contact": {"phone": registry.get("phone") or registry.get("phone_number"), "email": registry.get("email"), "website": registry.get("website")},
-            "source": "Business_database_5.0",
+            "source": registry.get("source") or "regional_project_dataset",
             "legal": {"status": "known", "entity_type": registry.get("legal_entity")},
             "investment": {"status": "known", "type": registry.get("investment_type")},
             "active": osm.get("status") == "matched",

@@ -405,6 +405,36 @@ def administrative_sync() -> dict[str, Any]:
     except Exception as exc:
         raise HTTPException(502, f"Sinkronisasi wilayah gagal: {exc}") from exc
 
+REGION_MAP_FALLBACKS: dict[str, tuple[float, float]] = {
+    "Kabupaten Kendal": (110.205, -6.925),
+    "Kota Surakarta": (110.822, -7.575),
+}
+
+
+def _regional_map_center(mapping_path: Path, region_name: str) -> list[float]:
+    """Return [longitude, latitude] from matched OSM records, with explicit regional fallback."""
+    try:
+        payload = json.loads(mapping_path.read_text(encoding="utf-8-sig"))
+        locations = [
+            item.get("osm", {}).get("location", {})
+            for item in payload.get("businesses", [])
+            if item.get("osm", {}).get("status") == "matched"
+        ]
+        coordinates = [
+            (float(location["longitude"]), float(location["latitude"]))
+            for location in locations
+            if isinstance(location, dict) and location.get("longitude") is not None and location.get("latitude") is not None
+        ]
+        if coordinates:
+            return [sum(point[0] for point in coordinates) / len(coordinates), sum(point[1] for point in coordinates) / len(coordinates)]
+    except (OSError, ValueError, TypeError, KeyError):
+        pass
+    fallback = REGION_MAP_FALLBACKS.get(region_name)
+    if fallback:
+        return [fallback[0], fallback[1]]
+    return [0.0, 0.0]
+
+
 @app.get("/api/data/regions")
 def available_data_regions() -> dict[str, Any]:
     """List only regional folders that contain a usable mapping JSON file."""
@@ -421,7 +451,8 @@ def available_data_regions() -> dict[str, Any]:
             region_item = next((item for item in REGIONS if item.province_id == (province_item.id if province_item else "") and _region_slug(item.name) in {region_dir.name, f"kota_{region_dir.name}", f"kabupaten_{region_dir.name}"}), None)
             if not province_item or not region_item:
                 continue
-            items.append({"province_code": province_item.id, "province_name": province_item.name, "province_slug": province_dir.name, "region_code": region_item.id, "region_name": region_item.name, "region_slug": region_dir.name})
+            center = _regional_map_center(mapping_path, region_item.name)
+            items.append({"province_code": province_item.id, "province_name": province_item.name, "province_slug": province_dir.name, "region_code": region_item.id, "region_name": region_item.name, "region_slug": region_dir.name, "center": center, "zoom": 10})
     return {"data": items}
 
 @app.get("/api/administrative/provinces")

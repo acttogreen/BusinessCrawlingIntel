@@ -23,23 +23,9 @@ def _write(path: Path, value: Any) -> None:
 
 
 def read_businesses() -> list[dict[str, Any]]:
-    from backend.mapping import MAPPING_PATH
-    if MAPPING_PATH.exists():
-        return mapped_businesses()
-    records = _read(BUSINESSES_PATH, [])
-    for record in records:
-        tags = record.get("metadata", {}).get("osm_tags", {})
-        record.setdefault("business_type", record.get("subcategory", "unknown"))
-        if "established_year" not in record:
-            for key in ("start_date", "opening_date", "start_date:opening"):
-                value = str(tags.get(key, ""))
-                year = next((int(value[index:index + 4]) for index in range(len(value) - 3) if value[index:index + 4].isdigit() and value[index:index + 2] in ("19", "20")), None)
-                if year:
-                    record["established_year"] = year
-                    break
-            else:
-                record["established_year"] = None
-    return records
+    # Business records are served from regional project mappings only.
+    # There is no legacy/root mapping fallback.
+    return []
 
 
 def write_businesses(records: list[dict[str, Any]]) -> None:

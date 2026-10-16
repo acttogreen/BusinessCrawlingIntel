@@ -23,6 +23,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_ROOT = Path(os.getenv("PDF_OUTPUT_ROOT", str(ROOT / "output" / "pdf-parser"))).resolve()
 STATE_PATH = ROOT / "backend" / "data" / "pdf_ingestion.json"
 PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
+OPENDATALOADER_JAR = PYTHON.parent.parent / "lib" / "site-packages" / "opendataloader_pdf" / "jar" / "opendataloader-pdf-cli.jar"
+JAVA = os.getenv("JAVA_BIN", "java")
 MAX_BYTES = int(os.getenv("PDF_MAX_BYTES", str(100 * 1024 * 1024)))
 MAX_DOCUMENTS = int(os.getenv("PDF_MAX_DOCUMENTS", "20"))
 TIMEOUT = int(os.getenv("PDF_EXTRACTION_TIMEOUT", "3600"))
@@ -244,26 +246,54 @@ def process(document_id: str) -> None:
     _update(document_id, status="processing", started_at=now(), error=None)
     try:
         log_path.write_text(f"{now()} — queued → processing\n{now()} — OpenDataLoader started\n", encoding="utf-8")
-        command = [str(PYTHON), "-c", "import sys,opendataloader_pdf; opendataloader_pdf.convert(input_path=[sys.argv[1]], output_dir=sys.argv[2], format='json,markdown')", str(folder / "original.pdf"), str(folder)]
-        result = subprocess.run(command, cwd=str(ROOT), capture_output=True, text=True, timeout=TIMEOUT, shell=False)
-        with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — OpenDataLoader completed (exit {result.returncode})\n")
-        json_files = [p for p in folder.glob("*.json") if p.name != "metadata.json"]
-        markdown_files = list(folder.glob("*.md"))
-        if result.returncode != 0 or not json_files: raise RuntimeError(f"parser exited {result.returncode}; JSON artifact missing")
+        command = [JAVA, "-Djava.awt.headless=true", "-Dapple.awt.UIElement=true", "-jar", str(OPENDATALOADER_JAR), str(folder / "original.pdf"), "--output-dir", str(folder), "--format", "json,markdown", "--threads", "1"]
+        result = subprocess.run(command, cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=TIMEOUT, shell=False)
+        with log_path.open("a", encoding="utf-8") as handle:
+            handle.write(f"{now()} — OpenDataLoader completed (exit {result.returncode})\n")
+            if result.stdout:
+                handle.write(f"[OpenDataLoader stdout]\n{result.stdout[-12000:]}\n")
+            if result.stderr:
+                handle.write(f"[OpenDataLoader stderr]\n{result.stderr[-12000:]}\n")
+        json_files = [p for p in folder.glob("*.json") if p.name not in {"metadata.json", "company_candidates.json", "company_candidates_raw.json"}]
+        markdown_files = [p for p in folder.glob("*.md") if p.name != "processing.log"]
+        if result.returncode != 0:
+            detail = result.stderr.strip() or result.stdout.strip() or "no parser output"
+            raise RuntimeError(f"OpenDataLoader exited with code {result.returncode}: {detail[-2000:]}")
+        if not json_files:
+            raise RuntimeError("OpenDataLoader completed successfully but JSON artifact is missing")
+        json_files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
         parsed = json.loads(json_files[0].read_text(encoding="utf-8"))
         raw_json, companies_json, companies_csv = folder / "company_candidates_raw.json", folder / "company_candidates.json", folder / "company_candidates.csv"
         parser_command = [str(PYTHON), str(ROOT / "backend" / "pdf_tools" / "extract_company_candidates.py"), "--input-json", str(json_files[0]), "--output-json", str(raw_json), "--output-csv", str(companies_csv), "--city", project["region_name"], "--province", project["province_name"]]
         if markdown_files: parser_command += ["--input-markdown", str(markdown_files[0])]
         with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Parsing company fields started\n")
         extracted = subprocess.run(parser_command, cwd=str(ROOT), capture_output=True, text=True, timeout=TIMEOUT)
-        candidates = json.loads(raw_json.read_text(encoding="utf-8")) if extracted.returncode == 0 else []
+        with log_path.open("a", encoding="utf-8") as handle:
+            handle.write(f"{now()} — Company parser completed (exit {extracted.returncode})\n")
+            if extracted.stdout:
+                handle.write(f"[Company parser stdout]\n{extracted.stdout[-12000:]}\n")
+            if extracted.stderr:
+                handle.write(f"[Company parser stderr]\n{extracted.stderr[-12000:]}\n")
+        if extracted.returncode != 0:
+            detail = extracted.stderr.strip() or extracted.stdout.strip() or "no parser output"
+            raise RuntimeError(f"company parser exited with code {extracted.returncode}: {detail[-2000:]}")
+        if not raw_json.is_file():
+            raise RuntimeError("company parser completed successfully but candidate JSON artifact is missing")
+        candidates = json.loads(raw_json.read_text(encoding="utf-8"))
         if not isinstance(candidates, list): raise RuntimeError("company candidates artifact must be a flat array")
         companies_json.write_text(json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8")
         with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Extracted {len(candidates)} valid companies; raw and live JSON artifacts generated\n")
         warnings = [x[-2000:] for x in (result.stderr, extracted.stderr) if x]
         _update(document_id, status="completed" if not warnings else "completed_with_warnings", completed_at=now(), json_artifact=json_files[0].name, markdown_artifact=markdown_files[0].name if markdown_files else None, raw_companies_artifact=raw_json.name, companies_artifact=companies_json.name, companies_csv_artifact=companies_csv.name, companies_count=len(candidates), processing_log=log_path.name, extraction=extraction_summary(parsed), warnings=warnings)
+    except subprocess.TimeoutExpired as exc:
+        detail = f"parser timed out after {TIMEOUT} seconds"
+        log_path.write_text(f"{now()} — {detail}\n{exc}", encoding="utf-8")
+        _update(document_id, status="failed", processing_log=log_path.name, error=detail, completed_at=now())
     except Exception as exc:
-        log_path.write_text(str(exc), encoding="utf-8"); _update(document_id, status="failed", processing_log=log_path.name, error=str(exc))
+        detail = str(exc)
+        with log_path.open("a", encoding="utf-8") as handle:
+            handle.write(f"{now()} — FAILED: {detail}\n")
+        _update(document_id, status="failed", processing_log=log_path.name, error=detail, completed_at=now())
 
 
 def queue_document(document_id: str) -> None:
