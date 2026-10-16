@@ -121,12 +121,12 @@ export function SettingsModal({ language, onClose }: Props) {
   const [token, setToken] = useState("");
   const [tokenConfigured, setTokenConfigured] = useState(cachedPreferences?.token_configured || false);
   const [endpoint, setEndpoint] = useState(cachedPreferences?.endpoint || "");
-  const [batchSize, setBatchSize] = useState(String(cachedPreferences?.batch_size || 20));
+  const [batchSize, setBatchSize] = useState(String(cachedPreferences?.batch_size || 5));
   const [timeoutSeconds, setTimeoutSeconds] = useState(String(cachedPreferences?.timeout_seconds || 180));
   const [retryCount, setRetryCount] = useState(String(cachedPreferences?.retry_count ?? 2));
   const [confidence, setConfidence] = useState(String(cachedPreferences?.confidence ?? 0.75));
   const [webLookup, setWebLookup] = useState(cachedPreferences?.web_lookup || false);
-  const [ruleset, setRuleset] = useState(`Prioritas bukti mentah:\n- evidence adalah acuan utama dan tidak boleh diubah.\n- district/kecamatan: cocokkan hanya dengan evidence, raw_data, atau sumber internet yang jelas; jika konflik, tandai review.\n- business_sector/sektor usaha: gunakan deskripsi usaha yang eksplisit; jangan menebak dari nama perusahaan.\n- phone_number/telepon: pertahankan format sumber; verifikasi nomor hanya jika sumber internet dapat diatribusikan.\n- Setiap perubahan wajib menyertakan alasan dan URL sumber jika berasal dari internet.\n- Jika tidak ada bukti cukup, kosongkan field dan tandai review.`);
+  const [ruleset, setRuleset] = useState("");
   const [companySchema, setCompanySchema] = useState(defaultCompanySchema);
   const [osmMapping, setOsmMapping] = useState(defaultOsmMapping);
   const [showToken, setShowToken] = useState(false);
@@ -143,16 +143,18 @@ export function SettingsModal({ language, onClose }: Props) {
       try {
         const settingsResponse = await fetch(`${API}/api/preferences`, { cache: "no-store" });
         const settings = await settingsResponse.json().catch(() => ({}));
+        const rulesetResponse = await fetch(`${API}/api/preferences/ruleset`, { cache: "no-store" });
+        const rulesetResult = await rulesetResponse.json().catch(() => ({}));
         if (!cancelled && settingsResponse.ok) {
           const snapshot: PreferenceSnapshot = {
             provider: settings.provider || "custom",
             model: settings.model || "gpt-4o-mini",
             endpoint: settings.endpoint || "",
-            batch_size: Number(settings.batch_size ?? 20),
+            batch_size: Number(settings.batch_size ?? 5),
             timeout_seconds: Number(settings.timeout_seconds ?? 180),
             retry_count: Number(settings.retry_count ?? 2),
             confidence: Number(settings.confidence ?? 0.75),
-            ruleset: settings.ruleset || "",
+            ruleset: rulesetResponse.ok ? String(rulesetResult.ruleset || "") : "",
             web_lookup: Boolean(settings.web_lookup),
             token_configured: Boolean(settings.token_configured),
           };
@@ -167,7 +169,7 @@ export function SettingsModal({ language, onClose }: Props) {
           setRetryCount(String(snapshot.retry_count));
           setConfidence(String(snapshot.confidence));
           setWebLookup(snapshot.web_lookup);
-          setRuleset(snapshot.ruleset || ruleset);
+          setRuleset(snapshot.ruleset);
           addLog("success", "Loaded saved settings from backend preferences");
         }
         const response = await fetch(`${API}/api/preferences/curation-status`, { cache: "no-store" });
@@ -228,7 +230,10 @@ export function SettingsModal({ language, onClose }: Props) {
       return;
     }
     try {
-      const response = await fetch(`${API}/api/preferences`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider, model, token: token.trim(), endpoint: endpoint.trim(), batch_size: Number(batchSize), timeout_seconds: Number(timeoutSeconds), retry_count: Number(retryCount), confidence: Number(confidence), ruleset, web_lookup: webLookup, mapping: { company_candidates: parsedCompanySchema, osm: parsedOsmMapping } }) });
+      const rulesetResponse = await fetch(`${API}/api/preferences/ruleset`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ruleset }) });
+      const rulesetResult = await rulesetResponse.json().catch(() => ({}));
+      if (!rulesetResponse.ok) throw new Error(typeof rulesetResult.detail === "string" ? rulesetResult.detail : `Ruleset HTTP ${rulesetResponse.status}`);
+      const response = await fetch(`${API}/api/preferences`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider, model, token: token.trim(), endpoint: endpoint.trim(), batch_size: Number(batchSize), timeout_seconds: Number(timeoutSeconds), retry_count: Number(retryCount), confidence: Number(confidence), web_lookup: webLookup, mapping: { company_candidates: parsedCompanySchema, osm: parsedOsmMapping } }) });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : `HTTP ${response.status}`);
       cachedPreferences = {
@@ -261,7 +266,7 @@ export function SettingsModal({ language, onClose }: Props) {
       <div className="modal-header"><p className="eyebrow">CONFIGURATION</p><h2 id="settings-title">{id ? "Pengaturan AI & OSM" : "AI & OSM settings"}</h2><p className="modal-description">{id ? "Konfigurasi lokal untuk kurasi kandidat perusahaan dan mapping JSON." : "Local configuration for company candidate curation and JSON mapping."}</p><button type="button" className="close" onClick={onClose} aria-label={id ? "Tutup" : "Close"}>×</button></div>
       <div className="settings-body">{loadingSettings && <p className="settings-loading" role="status">{id ? "Memuat konfigurasi tersimpan…" : "Loading saved configuration…"}</p>}
         <section className="settings-section"><h3>{id ? "Provider AI" : "AI provider"}</h3><p>{id ? "Token dienkripsi dan disimpan sebagai file preferences di backend." : "The token is encrypted and stored as a backend preferences file."}</p><div className="settings-grid"><label>Provider<select value={provider} onChange={(e) => setProvider(e.target.value)}><option value="openai">OpenAI</option><option value="groq">Groq</option><option value="together">Together AI</option><option value="ollama">Ollama (lokal)</option><option value="custom">Custom / OpenAI-compatible</option></select></label><label>Model<input value={model} onChange={(e) => setModel(e.target.value)} placeholder="gpt-4o-mini" /></label></div><label>Endpoint API / LLM lokal<input value={endpoint} onChange={(e) => setEndpoint(e.target.value)} placeholder={provider === "ollama" ? "http://127.0.0.1:11434/v1" : "https://api.example.com/v1"} /></label><label>API token<div className="token-field"><input type={showToken ? "text" : "password"} value={token} onChange={(e) => { setToken(e.target.value); setTokenConfigured(false); }} placeholder={tokenConfigured ? (id ? "Token tersimpan — kosongkan untuk mempertahankan" : "Token saved — leave empty to keep it") : "sk-..."} autoComplete="off" /><button type="button" onClick={() => setShowToken(!showToken)}>{showToken ? "Hide" : "Show"}</button></div></label><button type="button" className="settings-check-token settings-action-button" onClick={checkToken} disabled={checkingToken}>{checkingToken ? (id ? "Memeriksa…" : "Checking…") : (id ? "Cek koneksi token" : "Check token connection")}</button><div className="config-log-window" ref={logWindowRef} role="log" aria-live="polite">{logs.length === 0 ? <span className="config-log-placeholder">{id ? "Belum ada aktivitas koneksi." : "No connection activity yet."}</span> : logs.map((log, index) => <div key={`${log.text}-${index}`} className={`config-log-entry-${log.type}`}>{log.text}</div>)}</div><button type="button" className="config-log-clear" onClick={() => setLogs([])} disabled={!logs.length}>{id ? "Bersihkan log" : "Clear log"}</button></section>
-        <section className="settings-section"><h3>{id ? "Kurasi company candidates" : "Company candidate curation"}</h3><p>{id ? "Gunakan AI sebagai bantuan review; jangan menganggap hasil sebagai verifikasi legal." : "Use AI as review assistance; do not treat results as legal verification."}</p><div className="settings-grid"><label>{id ? "Ukuran batch" : "Batch size"}<input type="number" min="1" max="200" value={batchSize} onChange={(e) => setBatchSize(e.target.value)} /><small>{id ? "OpenAI: 20 mempercepat tanpa mengubah urutan serial." : "OpenAI: 20 speeds up processing while keeping serial order."}</small></label><label>{id ? "Timeout request (detik)" : "Request timeout (seconds)"}<input type="number" min="30" max="600" value={timeoutSeconds} onChange={(e) => setTimeoutSeconds(e.target.value)} /></label><label>{id ? "Percobaan ulang" : "Retries"}<input type="number" min="0" max="5" value={retryCount} onChange={(e) => setRetryCount(e.target.value)} /></label><label className="confidence-control"><span className="confidence-label">{id ? "Confidence minimum" : "Minimum confidence"}<output className="confidence-value" htmlFor="minimum-confidence">{Number(confidence).toFixed(2)}</output></span><input id="minimum-confidence" className="confidence-slider" type="range" min="0" max="1" step="0.05" value={confidence} onChange={(e) => setConfidence(e.target.value)} /><span className="confidence-scale"><span>0</span><span>1</span></span></label></div></section>
+        <section className="settings-section"><h3>{id ? "Kurasi company candidates" : "Company candidate curation"}</h3><p>{id ? "Gunakan AI sebagai bantuan review; jangan menganggap hasil sebagai verifikasi legal." : "Use AI as review assistance; do not treat results as legal verification."}</p><div className="settings-grid"><label>{id ? "Ukuran batch" : "Batch size"}<input type="number" min="1" max="200" value={batchSize} onChange={(e) => setBatchSize(e.target.value)} /><small>{id ? "Batas kandidat per batch; payload besar otomatis dipecah." : "Candidate limit per batch; large payloads are split automatically."}</small></label><label>{id ? "Timeout request (detik)" : "Request timeout (seconds)"}<input type="number" min="30" max="600" value={timeoutSeconds} onChange={(e) => setTimeoutSeconds(e.target.value)} /></label><label>{id ? "Percobaan ulang" : "Retries"}<input type="number" min="0" max="5" value={retryCount} onChange={(e) => setRetryCount(e.target.value)} /></label><label className="confidence-control"><span className="confidence-label">{id ? "Confidence minimum" : "Minimum confidence"}<output className="confidence-value" htmlFor="minimum-confidence">{Number(confidence).toFixed(2)}</output></span><input id="minimum-confidence" className="confidence-slider" type="range" min="0" max="1" step="0.05" value={confidence} onChange={(e) => setConfidence(e.target.value)} /><span className="confidence-scale"><span>0</span><span>1</span></span></label></div></section>
         <section className="settings-section"><div className="schema-heading"><div><h3>{id ? "Ruleset evidence & verifikasi internet" : "Evidence ruleset & web verification"}</h3><p>{id ? "Aturan prompt untuk sektor usaha terdekat dan verifikasi riwayat pendanaan asing." : "Prompt rules for nearest business-sector matching and foreign-funding verification."}</p></div></div><label className="checkbox-label"><input type="checkbox" checked={webLookup} onChange={(e) => setWebLookup(e.target.checked)} /> {id ? "Izinkan pencarian internet untuk sektor & pendanaan" : "Allow web lookup for sector and funding"}</label><textarea className="ruleset-editor" value={ruleset} onChange={(e) => setRuleset(e.target.value)} spellCheck={false} rows={18} aria-label="Evidence curation ruleset" /></section>
         <section className="settings-section"><div className="schema-heading"><div><h3>JSON schema → company candidates</h3><p>{id ? "Schema standar ekstraksi profil perusahaan." : "Standard company profile extraction schema."}</p></div><button type="button" className="schema-copy-button" onClick={() => copySchema(companySchema)}>{id ? "Salin schema" : "Copy schema"}</button></div><textarea className="schema-code-block" value={companySchema} onChange={(e) => setCompanySchema(e.target.value)} spellCheck={false} rows={14} aria-label="Company candidates JSON schema" /></section>
         <section className="settings-section"><div className="schema-heading"><div><h3>JSON OSM mapping</h3><p>{id ? "Pengaturan mapping field OSM ke kandidat perusahaan." : "Configure OSM field mapping for company candidates."}</p></div><button type="button" className="schema-copy-button" onClick={() => copySchema(osmMapping)}>{id ? "Salin schema" : "Copy schema"}</button></div><textarea className="mapping-editor" value={osmMapping} onChange={(e) => setOsmMapping(e.target.value)} spellCheck={false} rows={14} aria-label="OSM mapping JSON schema" /></section>
@@ -269,4 +274,3 @@ export function SettingsModal({ language, onClose }: Props) {
     </form>
   </div>;
 }
-

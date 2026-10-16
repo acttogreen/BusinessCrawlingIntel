@@ -2,6 +2,7 @@
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,9 @@ FIELDS = [
     "company_name", "legal_entity", "address", "district", "city", "province",
     "business_sector", "source_url", "evidence", "investment_type", "phone_number",
 ]
+MAX_CANDIDATE_EVIDENCE_CHARS = 1600
+MAX_BATCH_CANDIDATE_CHARS = 12000
+CURATION_VERSION = 2
 
 
 def _base_endpoint(settings: dict[str, Any]) -> str:
@@ -61,27 +65,33 @@ def _parse_json_content(content: Any) -> dict[str, Any]:
             lines = lines[1:]
         if lines and lines[-1].strip() == "```":
             lines = lines[:-1]
-        text = "\\n".join(lines).strip()
+        text = "\n".join(lines).strip()
     try:
         result = json.loads(text)
     except json.JSONDecodeError as exc:
         # Some compatible servers append a short explanation after valid JSON.
+        # Accept that only when the first JSON value is complete; never silently
+        # accept a truncated object because that would publish incomplete data.
         decoder = json.JSONDecoder()
         try:
             result, end = decoder.raw_decode(text)
-            if text[end:].strip():
-                raise exc
         except (json.JSONDecodeError, TypeError) as parse_exc:
-            preview = text[max(0, exc.pos - 80):exc.pos + 80].replace("\\n", " ")
+            preview = text[max(0, exc.pos - 80):exc.pos + 80].replace("\n", " ")
+            suffix = " Respons kemungkinan terpotong." if not text.rstrip().endswith(("}", "]")) else ""
             raise RuntimeError(
-                f"Provider AI mengembalikan JSON tidak valid pada karakter {exc.pos}: {preview!r}"
+                f"Provider AI mengembalikan JSON tidak valid pada karakter {exc.pos}: {preview!r}.{suffix}"
             ) from parse_exc
+        if text[end:].strip():
+            preview = text[max(0, exc.pos - 80):exc.pos + 80].replace("\n", " ")
+            raise RuntimeError(
+                f"Provider AI mengembalikan JSON dengan teks tambahan pada karakter {end}: {preview!r}"
+            ) from exc
     if not isinstance(result, dict):
         raise RuntimeError("Provider AI mengembalikan JSON dengan bentuk yang tidak didukung.")
     return result
 
 
-def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
+def _json_response(settings: dict[str, Any], prompt: str, retry_timeouts: bool = True) -> dict[str, Any]:
     headers = {"Content-Type": "application/json"}
     if settings.get("token", "").strip():
         headers["Authorization"] = f"Bearer {settings['token'].strip()}"
@@ -90,7 +100,7 @@ def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
         "temperature": 0,
         "response_format": {"type": "json_object"},
         "messages": [
-            {"role": "system", "content": "You are a careful data-quality reviewer. Never invent values. Return only valid JSON."},
+            {"role": "system", "content": "You are a field-level data-quality reviewer, not a candidate filter. Never delete, reject, omit, merge, or deduplicate candidates. Preserve every input candidate exactly once and never invent values. Return only valid JSON."},
             {"role": "user", "content": prompt},
         ],
     }
@@ -104,7 +114,7 @@ def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
             break
         except requests.Timeout as exc:
             last_error = exc
-            if attempt == retry_count:
+            if attempt == retry_count or not retry_timeouts:
                 raise RuntimeError(f"AI curation timed out after {timeout_seconds} seconds. Kurangi ukuran batch jika perlu.") from exc
         except requests.ConnectionError as exc:
             last_error = exc
@@ -129,45 +139,198 @@ def _json_response(settings: dict[str, Any], prompt: str) -> dict[str, Any]:
     return _parse_json_content(content)
 
 
+def _candidate_prompt_data(candidate: dict[str, Any]) -> dict[str, Any]:
+    data = {field: str(candidate.get(field, "") or "") for field in FIELDS}
+    evidence = data["evidence"]
+    if len(evidence) > MAX_CANDIDATE_EVIDENCE_CHARS:
+        company_name = data["company_name"].strip()
+        match_at = evidence.casefold().find(company_name.casefold()) if company_name else -1
+        start = max(0, match_at - 240) if match_at >= 0 else 0
+        excerpt = evidence[start:start + MAX_CANDIDATE_EVIDENCE_CHARS]
+        data["evidence"] = ("…" if start else "") + excerpt
+        if start + len(excerpt) < len(evidence):
+            data["evidence"] += "…"
+    data["candidate_id"] = str(candidate.get("candidate_id", ""))
+    data["source_index"] = candidate.get("source_index")
+    return data
+
+
+def _candidate_batches(
+    candidates: list[dict[str, Any]], batch_size: int
+) -> list[tuple[int, list[dict[str, Any]]]]:
+    batches: list[tuple[int, list[dict[str, Any]]]] = []
+    current: list[dict[str, Any]] = []
+    current_size = 2
+    start = 0
+    for index, candidate in enumerate(candidates):
+        compact = _candidate_prompt_data(candidate)
+        candidate_size = len(json.dumps(compact, ensure_ascii=False, separators=(",", ":")))
+        added_size = candidate_size + (1 if current else 0)
+        if current and (len(current) >= batch_size or current_size + added_size > MAX_BATCH_CANDIDATE_CHARS):
+            batches.append((start, current))
+            current = []
+            current_size = 2
+            start = index
+            added_size = candidate_size
+        current.append(candidate)
+        current_size += added_size
+    if current:
+        batches.append((start, current))
+    return batches
+
+
+def _normalize_field_validation(value: Any) -> dict[str, dict[str, Any]]:
+    if not isinstance(value, dict):
+        return {}
+    normalized: dict[str, dict[str, Any]] = {}
+    for field in FIELDS:
+        validation = value.get(field)
+        if not isinstance(validation, dict):
+            continue
+        try:
+            confidence = max(0.0, min(1.0, float(validation.get("confidence", 0))))
+        except (TypeError, ValueError):
+            confidence = 0.0
+        source = validation.get("source")
+        normalized[field] = {
+            "valid": validation.get("valid") is True,
+            "confidence": confidence,
+            "reason": str(validation.get("reason", "")),
+            "source": source if source in {"evidence", "missing"} else "missing",
+        }
+    return normalized
+
+
 def curate_candidates(candidates: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     settings = _settings()
     batch_size = max(1, min(200, int(settings.get("batch_size", 5))))
+    concurrency = max(1, min(8, int(settings.get("concurrency", 3))))
     minimum = float(settings.get("confidence", 0.75))
-    curated: list[dict[str, Any]] = []
-    rejected = 0
-    field_issues = 0
-    batch_timings: list[dict[str, Any]] = []
     started_at = time.perf_counter()
-    for start in range(0, len(candidates), batch_size):
-        batch = candidates[start:start + batch_size]
+    batches = _candidate_batches(candidates, batch_size)
+
+    def process_batch(batch_info: tuple[int, list[dict[str, Any]]]) -> tuple[int, list[dict[str, Any]], int, int, dict[str, Any]]:
+        start, batch = batch_info
         batch_started_at = time.perf_counter()
+        prompt_candidates = [_candidate_prompt_data(candidate) for candidate in batch]
         prompt = json.dumps({
-            "task": "Enrich and reconcile these company candidates. Treat evidence as the primary raw reference, then raw_data.source_text and raw_data.context_lines. Verify district, business_sector, and phone_number against evidence. Internet lookup is allowed only when enabled in settings; cite the URL and keep the raw evidence unchanged. Never replace evidence with web data, invent, or make unsupported inferences. Keep real business entities and remove duplicates/non-business entries.",
-            "ruleset": settings.get("ruleset", "Use conservative reconciliation: evidence wins; if conflict or uncertainty remains, preserve the original and mark review."),
+            "task": "Review and curate every input candidate exactly once; this is field-level data quality assistance, NOT candidate selection. NEVER delete, omit, reject, merge, or deduplicate a candidate. Preserve every candidate_id and source_index. Clean OCR artifacts, numbering, table labels, unused words, spacing, capitalization, and punctuation. Verify and revise each of company_name, address, business_sector, phone_number, district (kecamatan), city (kabupaten/kota), and investment_type against candidate.evidence first, then raw_data.source_text/context_lines and extracted_data. Keep all candidates even when evidence or fields are incomplete; preserve the available original value and mark the affected field for review with a reason instead of blanking it. Do not infer unsupported values. Preserve evidence and raw_data/extracted_data unchanged. Match results only by candidate_id, never company_name. Internet lookup is allowed only when enabled; cite URLs in field validation and never replace document evidence with web data. Every input candidate must have exactly one output.",
+            "ruleset": str(settings.get("ruleset", "")),
             "web_lookup_enabled": bool(settings.get("web_lookup", False)),
-            "required_fields": FIELDS,
+            "required_fields": ["company_name", "address", "business_sector", "phone_number", "district", "city", "investment_type"],
             "minimum_confidence": minimum,
-            "candidates": batch,
-            "output": {"candidates": "array", "rejected": "integer", "field_issues": "integer"},
-            "candidate_shape": {"candidate": "original fields plus preserved raw_data and extracted_data", "field_validation": {"field": "string", "valid": "boolean", "confidence": "number", "reason": "string", "source": "evidence|raw_data|missing"}, "curation_status": "accepted|review"},
+            "candidates": prompt_candidates,
+            "input_policy": "Only the fields shown in candidates are available; use evidence and existing field values only.",
+            "output": {"candidates": "array containing exactly one flat object with every field in candidate_shape for each input candidate_id; never omit/reject", "rejected": 0, "field_issues": "integer"},
+            "candidate_shape": {"candidate_id": "required stable identifier copied exactly", "source_index": "required original line index", "fields": FIELDS, "field_validation": "object keyed by field name", "curation_status": "accepted|review; rejected is forbidden"},
+            "rejection_policy": "forbidden; preserve every input candidate",
         }, ensure_ascii=False)
-        result = _json_response(settings, prompt)
-        for item in result.get("candidates", []):
-            if not isinstance(item, dict):
+        try:
+            result = _json_response(settings, prompt, retry_timeouts=len(batch) == 1)
+        except RuntimeError as exc:
+            split_required = (
+                "AI curation timed out after" in str(exc)
+                or "Respons AI terpotong karena batas token" in str(exc)
+            )
+            if not split_required or len(batch) < 2:
+                raise
+            midpoint = len(batch) // 2
+            left = process_batch((start, batch[:midpoint]))
+            right = process_batch((start + midpoint, batch[midpoint:]))
+            return start, left[1] + right[1], left[2] + right[2], left[3] + right[3], {
+                "batch": sum(1 for batch_start, _ in batches if batch_start <= start),
+                "input": len(batch),
+                "returned": left[4]["returned"] + right[4]["returned"],
+                "fallback": left[4]["fallback"] + right[4]["fallback"],
+                "prompt_characters": left[4]["prompt_characters"] + right[4]["prompt_characters"],
+                "duration_seconds": round(time.perf_counter() - batch_started_at, 2),
+                "split_after_capacity_error": True,
+            }
+        response_candidates = result.get("candidates")
+        if not isinstance(response_candidates, list):
+            raise RuntimeError("Provider AI harus mengembalikan array candidates dalam JSON.")
+        candidate_ids = {str(candidate.get("candidate_id")) for candidate in batch}
+        returned = {}
+        for response_item in response_candidates:
+            if not isinstance(response_item, dict):
                 continue
+            response_id = str(response_item.get("candidate_id", ""))
+            if response_id in candidate_ids:
+                returned[response_id] = response_item
+        curated_batch: list[dict[str, Any]] = []
+        for candidate in batch:
+            candidate_id = str(candidate.get("candidate_id"))
+            item = returned.get(candidate_id)
+            if isinstance(item, dict) and isinstance(item.get("candidate"), dict):
+                item = {**item["candidate"], **item}
+            if item is None:
+                item = {key: candidate.get(key, "") for key in FIELDS}
+                item["candidate_id"] = candidate_id
+                item["source_index"] = candidate.get("source_index")
+                item["curation_status"] = "review"
+                item["field_validation"] = {
+                    field: {"valid": False, "confidence": 0, "reason": "AI tidak mengembalikan kandidat; nilai sumber dipertahankan.", "source": "missing"}
+                    for field in FIELDS
+                }
             validations = item.get("field_validation", {})
             item["field_validation"] = validations if isinstance(validations, dict) else {}
-            item["curation_status"] = item.get("curation_status", "review")
-            # These provenance fields are controlled by the extractor, not the model.
-            source_name = str(item.get("company_name", "")).casefold()
-            original = next((candidate for candidate in batch if str(candidate.get("company_name", "")).casefold() == source_name), {})
-            item["raw_data"] = original.get("raw_data", {})
-            item["extracted_data"] = original.get("extracted_data", {})
-            curated.append(item)
-        rejected += int(result.get("rejected", 0) or 0)
-        field_issues += int(result.get("field_issues", 0) or 0)
-        batch_timings.append({"batch": start // batch_size + 1, "input": len(batch), "duration_seconds": round(time.perf_counter() - batch_started_at, 2)})
-    return curated, {"input": len(candidates), "accepted": len(curated), "rejected": rejected, "field_issues": field_issues, "model": settings.get("model", "gpt-4o-mini"), "duration_seconds": round(time.perf_counter() - started_at, 2), "batch_timings": batch_timings}
+            # Candidate curation is field-level only: enforce retention even if a
+            # provider ignores the prompt and labels a record as rejected.
+            if item.get("curation_status") not in {"accepted", "review"}:
+                item["curation_status"] = "review"
+                item.setdefault("field_validation", {})["company_name"] = {
+                    "valid": False,
+                    "confidence": 0,
+                    "reason": "Status rejected dari AI diubah menjadi review; kandidat tetap dipertahankan.",
+                    "source": "missing",
+                }
+            item["candidate_id"] = candidate_id
+            item["source_index"] = candidate.get("source_index", item.get("source_index"))
+            item["raw_data"] = candidate.get("raw_data", {})
+            item["extracted_data"] = candidate.get("extracted_data", {})
+            curated_batch.append({
+                **{
+                    field: str(candidate.get("evidence", "") or "") if field == "evidence"
+                    else str(item.get(field, candidate.get(field, "")) or "")
+                    for field in FIELDS
+                },
+                "candidate_id": candidate_id,
+                "source_index": candidate.get("source_index"),
+                "curation_status": item["curation_status"],
+                "field_validation": _normalize_field_validation(item["field_validation"]),
+            })
+        missing_count = len(batch) - len(returned)
+        timing = {
+            "batch": sum(1 for batch_start, _ in batches if batch_start <= start),
+            "input": len(batch),
+            "returned": len(batch) - missing_count,
+            "fallback": missing_count,
+            "prompt_characters": len(prompt),
+            "duration_seconds": round(time.perf_counter() - batch_started_at, 2),
+        }
+        return start, curated_batch, int(result.get("rejected", 0) or 0), int(result.get("field_issues", 0) or 0), timing
+
+    results = []
+    with ThreadPoolExecutor(max_workers=min(concurrency, max(1, len(batches)))) as executor:
+        for result in executor.map(process_batch, batches):
+            results.append(result)
+    results.sort(key=lambda result: result[0])
+    curated = [item for _, batch_result, _, _, _ in results for item in batch_result]
+    rejected = sum(result[2] for result in results)
+    field_issues = sum(result[3] for result in results)
+    batch_timings = [result[4] for result in results]
+    return curated, {
+        "input": len(candidates),
+        "accepted": len(curated),
+        "rejected": rejected,
+        "field_issues": field_issues,
+        "model": settings.get("model", "gpt-4o-mini"),
+        "curation_version": CURATION_VERSION,
+        "duration_seconds": round(time.perf_counter() - started_at, 2),
+        "batches": len(batches),
+        "batch_timings": batch_timings,
+        "concurrency": min(concurrency, max(1, len(batches))),
+    }
 
 
 def curation_status() -> dict[str, Any]:
@@ -209,6 +372,12 @@ def load_and_curate(path: Any, output_path: Any | None = None) -> dict[str, Any]
     if not isinstance(candidates, list):
         raise RuntimeError("company candidates artifact must be a flat array")
     input_candidates = [item for item in candidates if isinstance(item, dict)]
+    for index, candidate in enumerate(input_candidates):
+        candidate.setdefault("source_index", candidate.get("raw_data", {}).get("source_index", index))
+        candidate.setdefault("candidate_id", f"source-{candidate['source_index']}")
+        raw_data = candidate.setdefault("raw_data", {})
+        raw_data.setdefault("candidate_id", candidate["candidate_id"])
+        raw_data.setdefault("source_index", candidate["source_index"])
     curated, summary = curate_candidates(input_candidates)
     temporary_path = target_path.with_name(f".{target_path.name}.tmp")
     try:
@@ -218,7 +387,6 @@ def load_and_curate(path: Any, output_path: Any | None = None) -> dict[str, Any]
         if temporary_path.exists():
             temporary_path.unlink()
     summary["validation"] = validate_fields(curated)
-    summary["batches"] = (len(input_candidates) + max(1, min(200, int(_settings().get("batch_size", 5)))) - 1) // max(1, min(200, int(_settings().get("batch_size", 5)))) if input_candidates else 0
     return summary
 
 

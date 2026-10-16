@@ -15,6 +15,9 @@ from typing import Any, Iterator
 from backend.administrative_reference import validate_pair
 from backend.ai_curation import load_and_curate
 
+PDF_EXTRACTORS = {"opendataloader", "pymupdf"}
+DEFAULT_PDF_EXTRACTOR = "opendataloader"
+
 def validate_administrative_pair(province_code: str, regency_code: str, province_name: str = "", regency_name: str = "") -> tuple[str, str]:
     province, region = validate_pair(province_code, regency_code)
     return province.name, region.name
@@ -138,6 +141,34 @@ def document_path(project: dict[str, Any], document_id: str) -> Path:
     return safe_path(project_path(project) / document_id)
 
 
+def remove_artifact_tree(path: Path, *, retries: int = 3) -> None:
+    """Remove an artifact tree and surface failures instead of silently orphaning it."""
+    import shutil
+
+    target = safe_path(path)
+    if not target.exists():
+        return
+
+    def handle_remove_error(function: Any, failed_path: str, exc_info: Any) -> None:
+        # Generated artifacts can inherit read-only permissions on Windows.
+        os.chmod(failed_path, 0o700)
+        function(failed_path)
+
+    last_error: OSError | None = None
+    for attempt in range(retries):
+        try:
+            shutil.rmtree(target, onerror=handle_remove_error)
+            if not target.exists():
+                return
+        except OSError as exc:
+            last_error = exc
+        if attempt + 1 < retries:
+            time.sleep(0.2 * (attempt + 1))
+
+    if target.exists():
+        raise OSError(f"artifact folder could not be removed: {target}") from last_error
+
+
 def public_document(document: dict[str, Any]) -> dict[str, Any]:
     result = dict(document)
     result["artifact_location"] = f"output/pdf-parser/{document['province_name']}/{document['region_name']}/{document['project_id']}/{document['id']}"
@@ -152,6 +183,40 @@ def get_document(document_id: str) -> dict[str, Any] | None:
     return next((item for item in read_state()["documents"] if item["id"] == document_id), None)
 
 
+def reset_project_results(project_id: str) -> dict[str, Any] | None:
+    """Reset extraction results while preserving uploaded PDF files."""
+    with LOCK:
+        state = read_state()
+        project = next((item for item in state["projects"] if item["id"] == project_id), None)
+        if not project:
+            return None
+        documents = [item for item in state["documents"] if item["project_id"] == project_id]
+        if any(item.get("status") in {"queued", "processing"} for item in documents):
+            raise ValueError("Project has documents currently being processed")
+        reset_fields = {
+            "status": "uploaded", "started_at": None, "completed_at": None,
+            "parser": project.get("pdf_extractor", DEFAULT_PDF_EXTRACTOR),
+            "json_artifact": None, "markdown_artifact": None, "raw_companies_artifact": None,
+            "companies_artifact": None, "companies_csv_artifact": None, "curation_artifact": None,
+            "companies_count": 0, "processing_log": None, "warnings": [], "error": None,
+            "extraction": None,
+        }
+        for document in documents:
+            document.update(reset_fields)
+        write_state(state)
+    for document in documents:
+        folder = document_path(project, document["id"])
+        if folder.exists():
+            for path in folder.iterdir():
+                if path.name != "original.pdf":
+                    try:
+                        import shutil
+                        shutil.rmtree(path) if path.is_dir() else path.unlink()
+                    except OSError:
+                        pass
+    return {"project_id": project_id, "documents": len(documents)}
+
+
 def delete_document(document_id: str) -> dict[str, Any] | None:
     with LOCK:
         state = read_state()
@@ -164,13 +229,7 @@ def delete_document(document_id: str) -> dict[str, Any] | None:
         state["documents"] = [item for item in state["documents"] if item["id"] != document_id]
         write_state(state)
     if project:
-        try:
-            import shutil
-            folder = document_path(project, document_id)
-            if folder.exists():
-                shutil.rmtree(folder, ignore_errors=True)
-        except (OSError, ValueError):
-            pass
+        remove_artifact_tree(document_path(project, document_id))
     return document
 
 
@@ -183,27 +242,38 @@ def delete_project(project_id: str) -> bool:
         state["projects"] = [item for item in state["projects"] if item["id"] != project_id]
         state["documents"] = [item for item in state["documents"] if item["project_id"] != project_id]
         write_state(state)
-    # State deletion must not fail just because an old artifact is locked by
-    # a running parser or cannot be removed by the current OS account.
-    try:
-        folder = project_path(project)
-        if folder.exists():
-            import shutil
-            shutil.rmtree(folder, ignore_errors=True)
-    except (OSError, ValueError):
-        # The project and documents are already removed from persistent state.
-        # A later cleanup can remove orphaned artifacts without blocking DELETE.
-        pass
+    # Remove every uploaded document and generated artifact belonging to the project.
+    # The project path is validated against OUTPUT_ROOT before deletion.
+    folder = project_path(project)
+    remove_artifact_tree(folder)
     return True
 
 
 def create_project(payload: dict[str, Any]) -> dict[str, Any]:
     province_name, regency_name = validate_administrative_pair(payload["province_code"], payload["regency_code"], payload["province_name"], payload["regency_name"])
-    project = {"id": f"project_{uuid.uuid4().hex}", "province_code": payload["province_code"], "province_name": province_name, "regency_code": payload["regency_code"], "regency_name": regency_name, "region_name": regency_name, "region_type": "kota" if regency_name.lower().startswith("kota ") else "kabupaten", "source_year": payload.get("source_year"), "source_category": payload.get("source_category"), "description": payload.get("description"), "notes": payload.get("notes"), "status": "active", "created_at": now(), "updated_at": now()}
+    extractor = str(payload.get("pdf_extractor") or DEFAULT_PDF_EXTRACTOR).strip().lower()
+    if extractor not in PDF_EXTRACTORS:
+        raise ValueError(f"unsupported PDF extractor: {extractor}")
+    project = {"id": f"project_{uuid.uuid4().hex}", "province_code": payload["province_code"], "province_name": province_name, "regency_code": payload["regency_code"], "regency_name": regency_name, "region_name": regency_name, "region_type": "kota" if regency_name.lower().startswith("kota ") else "kabupaten", "source_year": payload.get("source_year"), "source_category": payload.get("source_category"), "description": payload.get("description"), "notes": payload.get("notes"), "pdf_extractor": extractor, "status": "active", "created_at": now(), "updated_at": now()}
     with LOCK:
         state = read_state(); state["projects"].append(project); write_state(state)
     project_path(project).mkdir(parents=True, exist_ok=True)
     return project
+
+
+def update_project_extractor(project_id: str, extractor: str) -> dict[str, Any] | None:
+    extractor = str(extractor).strip().lower()
+    if extractor not in PDF_EXTRACTORS:
+        raise ValueError(f"unsupported PDF extractor: {extractor}")
+    with LOCK:
+        state = read_state()
+        project = next((item for item in state["projects"] if item.get("id") == project_id), None)
+        if not project:
+            return None
+        project["pdf_extractor"] = extractor
+        project["updated_at"] = now()
+        write_state(state)
+        return project
 
 
 def add_document(project_id: str, filename: str, content: bytes) -> dict[str, Any]:
@@ -219,7 +289,7 @@ def add_document(project_id: str, filename: str, content: bytes) -> dict[str, An
         document_id = f"document_{uuid.uuid4().hex}"
         folder = document_path(project, document_id); folder.mkdir(parents=True, exist_ok=False)
         (folder / "original.pdf").write_bytes(content)
-        document = {"id": document_id, "project_id": project_id, "province_name": project["province_name"], "region_name": project["region_name"], "original_filename": Path(filename).name, "sha256": digest, "status": "uploaded", "uploaded_at": now(), "started_at": None, "completed_at": None, "parser": "opendataloader-pdf 2.5.13", "json_artifact": None, "markdown_artifact": None, "processing_log": None, "warnings": [], "error": None}
+        document = {"id": document_id, "project_id": project_id, "province_name": project["province_name"], "region_name": project["region_name"], "original_filename": Path(filename).name, "sha256": digest, "status": "uploaded", "uploaded_at": now(), "started_at": None, "completed_at": None, "parser": project.get("pdf_extractor", DEFAULT_PDF_EXTRACTOR), "json_artifact": None, "markdown_artifact": None, "processing_log": None, "warnings": [], "error": None}
         state["documents"].append(document); write_state(state)
     return public_document(document)
 
@@ -245,24 +315,38 @@ def process(document_id: str) -> None:
     folder = document_path(project, document_id); log_path = folder / "processing.log"
     _update(document_id, status="processing", started_at=now(), error=None)
     try:
-        log_path.write_text(f"{now()} — queued → processing\n{now()} — OpenDataLoader started\n", encoding="utf-8")
-        command = [JAVA, "-Djava.awt.headless=true", "-Dapple.awt.UIElement=true", "-jar", str(OPENDATALOADER_JAR), str(folder / "original.pdf"), "--output-dir", str(folder), "--format", "json,markdown", "--threads", "1"]
-        result = subprocess.run(command, cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=TIMEOUT, shell=False)
-        with log_path.open("a", encoding="utf-8") as handle:
-            handle.write(f"{now()} — OpenDataLoader completed (exit {result.returncode})\n")
-            if result.stdout:
-                handle.write(f"[OpenDataLoader stdout]\n{result.stdout[-12000:]}\n")
-            if result.stderr:
-                handle.write(f"[OpenDataLoader stderr]\n{result.stderr[-12000:]}\n")
-        json_files = [p for p in folder.glob("*.json") if p.name not in {"metadata.json", "company_candidates.json", "company_candidates_raw.json"}]
-        markdown_files = [p for p in folder.glob("*.md") if p.name != "processing.log"]
-        if result.returncode != 0:
-            detail = result.stderr.strip() or result.stdout.strip() or "no parser output"
-            raise RuntimeError(f"OpenDataLoader exited with code {result.returncode}: {detail[-2000:]}")
-        if not json_files:
-            raise RuntimeError("OpenDataLoader completed successfully but JSON artifact is missing")
-        json_files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
-        parsed = json.loads(json_files[0].read_text(encoding="utf-8"))
+        extractor = str(project.get("pdf_extractor") or document.get("parser") or DEFAULT_PDF_EXTRACTOR).lower()
+        log_path.write_text(f"{now()} — queued → processing\n{now()} — {extractor} started\n", encoding="utf-8")
+        if extractor == "pymupdf":
+            from backend.pdf_tools.pymupdf import extract_pdf
+            json_path, markdown_path, adapter_summary = extract_pdf(folder / "original.pdf", folder)
+            json_files, markdown_files = [json_path], [markdown_path]
+            _update(document_id, json_artifact=json_path.name, markdown_artifact=markdown_path.name)
+            parsed = json.loads(json_path.read_text(encoding="utf-8"))
+            log_path.open("a", encoding="utf-8").write(f"{now()} — PyMuPDF completed: {adapter_summary}\n")
+            parser_result_stderr = ""
+            extraction_warnings: list[str] = []
+        else:
+            command = [JAVA, "-Djava.awt.headless=true", "-Dapple.awt.UIElement=true", "-jar", str(OPENDATALOADER_JAR), str(folder / "original.pdf"), "--output-dir", str(folder), "--format", "json,markdown", "--threads", "1"]
+            result = subprocess.run(command, cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=TIMEOUT, shell=False)
+            with log_path.open("a", encoding="utf-8") as handle:
+                handle.write(f"{now()} — OpenDataLoader completed (exit {result.returncode})\n")
+                if result.stdout: handle.write(f"[OpenDataLoader stdout]\n{result.stdout[-12000:]}\n")
+                if result.stderr: handle.write(f"[OpenDataLoader stderr]\n{result.stderr[-12000:]}\n")
+            json_files = [p for p in folder.glob("*.json") if p.name not in {"metadata.json", "company_candidates.json", "company_candidates_raw.json"}]
+            markdown_files = [p for p in folder.glob("*.md") if p.name != "processing.log"]
+            if result.returncode != 0:
+                detail = result.stderr.strip() or result.stdout.strip() or "no parser output"
+                raise RuntimeError(f"OpenDataLoader exited with code {result.returncode}: {detail[-2000:]}")
+            if markdown_files:
+                markdown_files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
+                _update(document_id, markdown_artifact=markdown_files[0].name)
+            if not json_files: raise RuntimeError("OpenDataLoader completed successfully but JSON artifact is missing")
+            json_files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
+            _update(document_id, json_artifact=json_files[0].name)
+            parsed = json.loads(json_files[0].read_text(encoding="utf-8"))
+            parser_result_stderr = result.stderr
+            extraction_warnings = [result.stderr[-2000:]] if result.stderr else []
         raw_json, companies_json, companies_csv = folder / "company_candidates_raw.json", folder / "company_candidates.json", folder / "company_candidates.csv"
         parser_command = [str(PYTHON), str(ROOT / "backend" / "pdf_tools" / "extract_company_candidates.py"), "--input-json", str(json_files[0]), "--output-json", str(raw_json), "--output-csv", str(companies_csv), "--city", project["region_name"], "--province", project["province_name"]]
         if markdown_files: parser_command += ["--input-markdown", str(markdown_files[0])]
@@ -283,7 +367,7 @@ def process(document_id: str) -> None:
         if not isinstance(candidates, list): raise RuntimeError("company candidates artifact must be a flat array")
         companies_json.write_text(json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8")
         with log_path.open("a", encoding="utf-8") as handle: handle.write(f"{now()} — Extracted {len(candidates)} valid companies; raw and live JSON artifacts generated\n")
-        warnings = [x[-2000:] for x in (result.stderr, extracted.stderr) if x]
+        warnings = [x[-2000:] for x in (extraction_warnings + [extracted.stderr]) if x]
         _update(document_id, status="completed" if not warnings else "completed_with_warnings", completed_at=now(), json_artifact=json_files[0].name, markdown_artifact=markdown_files[0].name if markdown_files else None, raw_companies_artifact=raw_json.name, companies_artifact=companies_json.name, companies_csv_artifact=companies_csv.name, companies_count=len(candidates), processing_log=log_path.name, extraction=extraction_summary(parsed), warnings=warnings)
     except subprocess.TimeoutExpired as exc:
         detail = f"parser timed out after {TIMEOUT} seconds"

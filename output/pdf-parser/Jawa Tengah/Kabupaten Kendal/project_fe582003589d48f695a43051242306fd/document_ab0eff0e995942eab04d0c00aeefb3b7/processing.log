@@ -1,0 +1,31 @@
+2026-10-16T15:20:04.935498+00:00 — queued → processing
+2026-10-16T15:20:04.935498+00:00 — opendataloader started
+2026-10-16T15:20:24.640533+00:00 — OpenDataLoader completed (exit 0)
+[OpenDataLoader stderr]
+Oct 16, 2026 10:20:05 PM org.opendataloader.pdf.processors.DocumentProcessor preprocessing
+INFO: File name: D:\Project\BusinessCrawlingIntel\output\pdf-parser\Jawa Tengah\Kabupaten Kendal\project_fe582003589d48f695a43051242306fd\document_ab0eff0e995942eab04d0c00aeefb3b7\original.pdf
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor calculateDocumentInfo
+INFO: Number of pages: 69
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor calculateDocumentInfo
+INFO: Author: bps
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor calculateDocumentInfo
+INFO: Title: null
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor calculateDocumentInfo
+INFO: Creation date: D:20251218140304+07'00'
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor calculateDocumentInfo
+INFO: Modification date: D:20251218140802+07'00'
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.DocumentProcessor processDocument
+INFO: Processing 69 pages with 1 threads
+Oct 16, 2026 10:20:07 PM org.opendataloader.pdf.processors.ContentFilterProcessor processBackgrounds
+WARNING: Detected background on page 22
+Oct 16, 2026 10:20:24 PM org.opendataloader.pdf.json.JsonWriter writeToJson
+INFO: Created D:\Project\BusinessCrawlingIntel\output\pdf-parser\Jawa Tengah\Kabupaten Kendal\project_fe582003589d48f695a43051242306fd\document_ab0eff0e995942eab04d0c00aeefb3b7\original.json
+Oct 16, 2026 10:20:24 PM org.opendataloader.pdf.markdown.MarkdownGenerator writeToMarkdown
+INFO: Created D:\Project\BusinessCrawlingIntel\output\pdf-parser\Jawa Tengah\Kabupaten Kendal\project_fe582003589d48f695a43051242306fd\document_ab0eff0e995942eab04d0c00aeefb3b7\original.md
+
+2026-10-16T15:20:24.666048+00:00 — Parsing company fields started
+2026-10-16T15:20:24.826571+00:00 — Company parser completed (exit 0)
+[Company parser stdout]
+Kandidat ditemukan: 96
+
+2026-10-16T15:20:24.849088+00:00 — Extracted 96 valid companies; raw and live JSON artifacts generated

@@ -16,13 +16,14 @@ from typing import Any
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
-from backend.pdf_ingestion import add_document, create_project, delete_document, delete_project, get_document, get_project, project_path, public_document, queue_document, read_state, write_state, document_path
+from backend.pdf_ingestion import add_document, create_project, delete_document, delete_project, get_document, get_project, project_path, public_document, queue_document, read_state, reset_project_results, update_project_extractor, write_state, document_path
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.storage import read_activities, read_businesses, read_metadata
 from backend.mapping import build_mapping_for_sources, validate_mapping_payload
+from backend.curation_jobs import get_job, start_job
 
 
 def atomic_json_write(path: Path, payload: dict[str, Any]) -> None:
@@ -54,18 +55,38 @@ def region_mapping_path(project: dict[str, Any]) -> Path:
         if path.exists():
             return path
     return province_dir / region_slug / "business_database_mapping.json"
-from backend.preferences import preferences_status, read_preferences, write_preferences
+from backend.preferences import preferences_status, read_preferences, read_ruleset, write_preferences, write_ruleset
 from backend.ai_curation import curation_status, load_and_curate, preference_error
 
 
 app = FastAPI(title="Surakarta Business Intelligence API", version="0.1.0")
 
 
+@app.get("/api/preferences/ruleset")
+def get_ruleset() -> dict[str, str]:
+    try:
+        return {"ruleset": read_ruleset()}
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.put("/api/preferences/ruleset")
+def save_ruleset(payload: dict[str, str]) -> dict[str, bool]:
+    ruleset = payload.get("ruleset")
+    if not isinstance(ruleset, str) or len(ruleset) > 12000:
+        raise HTTPException(status_code=422, detail="Ruleset must be text of at most 12000 characters")
+    try:
+        write_ruleset(ruleset)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    return {"saved": True}
+
+
 @app.get("/api/preferences", response_model=dict[str, Any])
 def get_preferences() -> dict[str, Any]:
     settings = read_preferences()
     if not settings:
-        settings = {"provider": "openai", "model": "gpt-4o-mini", "endpoint": "https://api.openai.com/v1", "batch_size": 20, "timeout_seconds": 180, "retry_count": 2, "confidence": 0.75, "ruleset": "", "web_lookup": False, "token": ""}
+        settings = {"provider": "openai", "model": "gpt-4o-mini", "endpoint": "https://api.openai.com/v1", "batch_size": 5, "timeout_seconds": 180, "retry_count": 2, "concurrency": 3, "confidence": 0.75, "ruleset": "", "web_lookup": False, "token": ""}
     return {
         "configured": bool(settings.get("token")) or settings.get("provider") in {"ollama", "local"},
         "provider": settings["provider"],
@@ -74,8 +95,8 @@ def get_preferences() -> dict[str, Any]:
         "batch_size": settings["batch_size"],
         "timeout_seconds": settings.get("timeout_seconds", 180),
         "retry_count": settings.get("retry_count", 2),
+        "concurrency": settings.get("concurrency", 3),
         "confidence": settings["confidence"],
-        "ruleset": settings.get("ruleset", ""),
         "web_lookup": settings.get("web_lookup", False),
         "token_configured": bool(settings.get("token")),
     }
@@ -87,9 +108,10 @@ class PreferencesInput(BaseModel):
     model: str = Field(default="", max_length=200)
     token: str = Field(default="", max_length=1000)
     endpoint: str = Field(default="", max_length=500)
-    batch_size: int = Field(default=20, ge=1, le=200)
+    batch_size: int = Field(default=5, ge=1, le=200)
     timeout_seconds: int = Field(default=180, ge=30, le=600)
     retry_count: int = Field(default=2, ge=0, le=5)
+    concurrency: int = Field(default=3, ge=1, le=8)
     confidence: float = Field(default=0.75, ge=0, le=1)
     ruleset: str = Field(default="", max_length=12000)
     web_lookup: bool = False
@@ -391,6 +413,7 @@ class IngestionProjectInput(BaseModel):
     source_year: int | None = Field(default=None, ge=1900, le=2200)
     description: str | None = Field(default=None, max_length=2000)
     notes: str | None = Field(default=None, max_length=2000)
+    pdf_extractor: str = Field(default="opendataloader", pattern="^(opendataloader|pymupdf)$")
 
 
 @app.get("/api/administrative/metadata")
@@ -514,9 +537,35 @@ def ingestion_create_project(payload: IngestionProjectInput) -> dict[str, Any]:
     except ValueError as exc: raise HTTPException(422, str(exc)) from exc
 
 
+@app.patch("/api/ingestion/projects/{project_id}/extractor")
+def ingestion_update_project_extractor(project_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    try:
+        project = update_project_extractor(project_id, str(payload.get("pdf_extractor") or ""))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if not project:
+        raise HTTPException(404, "Project not found")
+    return project
+
+
+@app.delete("/api/ingestion/projects/{project_id}/results")
+def ingestion_reset_project_results(project_id: str) -> dict[str, Any]:
+    try:
+        result = reset_project_results(project_id)
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    if not result:
+        raise HTTPException(404, "Project not found")
+    return {"status": "reset", **result}
+
+
 @app.delete("/api/ingestion/projects/{project_id}")
 def ingestion_delete_project(project_id: str) -> dict[str, str]:
-    if not delete_project(project_id):
+    try:
+        deleted = delete_project(project_id)
+    except (OSError, ValueError) as exc:
+        raise HTTPException(500, f"Project state deleted, tetapi folder data gagal dihapus: {exc}") from exc
+    if not deleted:
         raise HTTPException(404, "Project not found")
     return {"status": "deleted", "project_id": project_id}
 
@@ -555,36 +604,17 @@ def ingestion_curate_project(project_id: str) -> dict[str, Any]:
     if not project:
         raise HTTPException(404, "Project not found")
     state = read_state()
-    documents = [d for d in state["documents"] if d["project_id"] == project_id and d.get("status") in {"completed", "completed_with_warnings"}]
-    if not documents:
+    if not any(d["project_id"] == project_id and d.get("status") in {"completed", "completed_with_warnings"} for d in state["documents"]):
         raise HTTPException(422, "No completed PDF is ready for AI curation")
-    results = []
-    for document in documents:
-        folder = document_path(project, document["id"])
-        try:
-            raw_path = folder / (document.get("raw_companies_artifact") or "company_candidates_raw.json")
-            candidates_path = folder / "company_candidates.json"
-            if not raw_path.is_file():
-                raw_path = candidates_path
-            summary = load_and_curate(raw_path, candidates_path)
-            curated_candidates = json.loads(candidates_path.read_text(encoding="utf-8"))
-            csv_path = folder / "company_candidates.csv"
-            fields = list(curated_candidates[0].keys()) if curated_candidates else ["company_name", "legal_entity", "address", "district", "city", "province", "business_sector", "source_url", "evidence", "investment_type", "phone_number"]
-            with csv_path.open("w", encoding="utf-8-sig", newline="") as handle:
-                writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
-                writer.writeheader()
-                writer.writerows(curated_candidates)
-            document["companies_artifact"] = "company_candidates.json"
-            document["curation_artifact"] = "company_candidates.json"
-            document["companies_count"] = summary["accepted"]
-            document["curation"] = summary
-            results.append({"document_id": document["id"], **summary, "artifact": "company_candidates.json"})
-        except (RuntimeError, OSError, ValueError, KeyError) as exc:
-            detail = str(exc)
-            status_code = 429 if "HTTP 429" in detail else 502
-            raise HTTPException(status_code, detail) from exc
-    write_state(state)
-    return {"status": "curated", "documents": results}
+    return start_job(project_id)
+
+
+@app.get("/api/ingestion/projects/{project_id}/curate/{job_id}")
+def ingestion_curation_status(project_id: str, job_id: str) -> dict[str, Any]:
+    job = get_job(job_id)
+    if not job or job.get("project_id") != project_id:
+        raise HTTPException(404, "Curation job not found")
+    return job
 
 
 @app.get("/api/regions/{province_code}/{region_code}/business-database-mapping")
@@ -736,8 +766,9 @@ def ingestion_artifact(document_id: str, artifact: str) -> Response:
     if not document or not project or artifact not in allowed or not allowed[artifact]: raise HTTPException(404, "Artifact not found")
     path = document_path(project, document_id) / allowed[artifact]
     if not path.is_file(): raise HTTPException(404, "Artifact not found")
-    media = "application/pdf" if artifact == "original" else "application/json" if artifact in {"json", "companies-raw", "companies", "companies-curated"} else "text/csv" if artifact == "companies-csv" else "text/plain"
-    return Response(content=path.read_bytes(), media_type=media, headers={"Content-Disposition": f'attachment; filename="{path.name}"'})
+    media = "application/pdf" if artifact == "original" else "application/json" if artifact in {"json", "companies-raw", "companies", "companies-curated"} else "text/csv" if artifact == "companies-csv" else "text/markdown" if artifact == "markdown" else "text/plain"
+    disposition = "inline" if artifact == "markdown" else "attachment"
+    return Response(content=path.read_bytes(), media_type=media, headers={"Content-Disposition": f'{disposition}; filename="{path.name}"'})
 
 
 @app.get("/health")

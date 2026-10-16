@@ -3,3 +3,16 @@ uvicorn[standard]>=0.30,<1
 requests>=2.32,<3
 python-multipart>=0.0.9,<1
 cryptography>=43,<46
+PyMuPDF>=1.24,<2
+pymupdf4llm>=0.0.17,<1
+opendataloader-pdf>=2.5,<3
+
+# PDF extractor engines are organized under backend/pdf_tools:
+# - opendataloader: existing Java/JAR based extractor
+# - pymupdf: PyMuPDF + pymupdf4llm adapter
+
+# OpenDataLoader PDF source: https://github.com/opendataloader-project/opendataloader-pdf
+# PyMuPDF source: https://github.com/pymupdf/PyMuPDF
+# PyMuPDF4LLM source: https://github.com/pymupdf/RAG
+
+# Note: opendataloader-pdf may already be installed from the project's previous setup.
