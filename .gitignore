@@ -13,3 +13,5 @@ backend/*.log
 !.env.example
 preferences/.key
 preferences/*.enc
+.*cache*
+backend/data/.*cache*

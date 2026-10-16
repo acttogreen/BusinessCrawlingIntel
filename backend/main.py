@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import io
 import json
 import zipfile
@@ -664,7 +664,7 @@ def ingestion_process_osm(project_id: str) -> dict[str, Any]:
     if not isinstance(osm_records, list):
         raise HTTPException(422, "OSM source data must be an array")
     try:
-        mapping = build_mapping_for_sources(candidates, osm_records, f"project:{project_id}:company_candidates.json", osm_path.name, region_name=project["region_name"])
+        mapping = build_mapping_for_sources(candidates, osm_records, f"project:{project_id}:company_candidates.json", osm_path.name, region_name=project["region_name"], province_name=project.get("province_name"))
         output = region_mapping_path(project)
         atomic_json_write(output, mapping)
     except (OSError, ValueError, TypeError) as exc:

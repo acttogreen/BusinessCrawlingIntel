@@ -1,0 +1,9 @@
+2026-10-16T16:12:20.297435+00:00 — queued → processing
+2026-10-16T16:12:20.297435+00:00 — pymupdf started
+2026-10-16T16:12:25.097407+00:00 — PyMuPDF completed: {'elements': 1298, 'pages': 56, 'characters': 58518}
+2026-10-16T16:12:25.097407+00:00 — Parsing company fields started
+2026-10-16T16:12:25.211833+00:00 — Company parser completed (exit 0)
+[Company parser stdout]
+Kandidat ditemukan: 39
+
+2026-10-16T16:12:25.221834+00:00 — Extracted 39 valid companies; raw and live JSON artifacts generated

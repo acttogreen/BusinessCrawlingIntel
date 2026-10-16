@@ -6,11 +6,11 @@
     "registry": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
     "osm": "businesses.json"
   },
-  "generated_at": "2026-10-16T15:25:12.815237+00:00",
+  "generated_at": "2026-10-16T16:10:37.012794+00:00",
   "summary": {
     "total": 96,
-    "matched": 0,
-    "unmatched": 96
+    "matched": 96,
+    "unmatched": 0
   },
   "businesses": [
     {
@@ -59,15 +59,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:97085743",
+        "osm_type": "node",
+        "osm_id": 97085743,
+        "name": "BISNIS RAKYAT INDONESIA",
+        "location": {
+          "latitude": -6.94526,
+          "longitude": 110.26838
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Semarang-Kendal Km.19 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:18.428358+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:18.428358+00:00"
       }
     },
     {
@@ -116,15 +135,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:90554252",
+        "osm_type": "node",
+        "osm_id": 90554252,
+        "name": "INDUSTRI GULA NUSANTARA",
+        "location": {
+          "latitude": -6.93364,
+          "longitude": 110.14336
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Cepiring",
+          "display": "Jl. Ir Soekarno Hatta Barat Km 6 Rt 005 Rw 004 Cepiring Cepiring Kab. Kendal Jawa Tengah 51352"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Cepiring"
+        },
+        "last_seen_at": "2026-10-16T16:10:18.428358+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:18.428358+00:00"
       }
     },
     {
@@ -173,15 +211,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:25393806",
+        "osm_type": "node",
+        "osm_id": 25393806,
+        "name": "INMAS SURYA MAKMUR",
+        "location": {
+          "latitude": -6.96992,
+          "longitude": 110.28242
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 59582"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:18.428358+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:18.428358+00:00"
       }
     },
     {
@@ -230,15 +287,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:46009688",
+        "osm_type": "node",
+        "osm_id": 46009688,
+        "name": "BOGA MAKMUR GRACIA",
+        "location": {
+          "latitude": -7.10516,
+          "longitude": 110.29
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Jl. Raya Boja-Limbangan Km 01 Rt 001 Rw 004 Salamsari Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:19.340822+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:19.340822+00:00"
       }
     },
     {
@@ -287,15 +363,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:98750202",
+        "osm_type": "node",
+        "osm_id": 98750202,
+        "name": "LANGGENG MAKMUR",
+        "location": {
+          "latitude": -7.12064,
+          "longitude": 110.2864
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Jl. Raya Boja-Limbangan Km 01 Rt 001 Rw 004 Salamsari Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:20.086730+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:20.086730+00:00"
       }
     },
     {
@@ -344,15 +439,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:74185231",
+        "osm_type": "node",
+        "osm_id": 74185231,
+        "name": "CENTRAL PERTIWI BAHARI",
+        "location": {
+          "latitude": -6.96542,
+          "longitude": 110.26064
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Indraprasta No. 26 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:20.938185+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:20.938185+00:00"
       }
     },
     {
@@ -401,15 +515,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:22724648",
+        "osm_type": "node",
+        "osm_id": 22724648,
+        "name": "MAHKOTA NIKO PERKASA",
+        "location": {
+          "latitude": -6.96236,
+          "longitude": 110.26874
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Indraprasta No. 26 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:21.680666+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:21.680666+00:00"
       }
     },
     {
@@ -458,15 +591,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:94618208",
+        "osm_type": "node",
+        "osm_id": 94618208,
+        "name": "NIKI HARUM",
+        "location": {
+          "latitude": -6.96956,
+          "longitude": 110.25236
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Laut Kav.8 Dk Ngebum Rt 006/Rw 008 Mororejo Kaliwungu Kab. Kendal Jawa Tengah 59452"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:22.515707+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:22.515707+00:00"
       }
     },
     {
@@ -515,15 +667,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:21400358",
+        "osm_type": "node",
+        "osm_id": 21400358,
+        "name": "GARAM BERKAH MANDIRI",
+        "location": {
+          "latitude": -7.08756,
+          "longitude": 110.03126
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Sukorejo",
+          "display": "Dusun Sentul Rt 009 Rw 009 Sukorejo Sukorejo Kab. Kendal Jawa Tengah 51363"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Sukorejo"
+        },
+        "last_seen_at": "2026-10-16T16:10:22.870839+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:22.870839+00:00"
       }
     },
     {
@@ -572,15 +743,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:24109712",
+        "osm_type": "node",
+        "osm_id": 24109712,
+        "name": "GOLDEN SNACK MAS SEJAHTERA",
+        "location": {
+          "latitude": -6.95084,
+          "longitude": 110.27738
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Indraprasta No. 11 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:23.602175+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:23.602175+00:00"
       }
     },
     {
@@ -629,15 +819,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:77562827",
+        "osm_type": "node",
+        "osm_id": 77562827,
+        "name": "RUMPUN SARI MEDINI",
+        "location": {
+          "latitude": -7.15314,
+          "longitude": 110.32922
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Limbangan",
+          "display": "Dusun Ngesrep Balong Rt 005 Rw 007 Limbangan Kab. Kendal Jawa Tengah 51383"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Limbangan"
+        },
+        "last_seen_at": "2026-10-16T16:10:23.985334+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:23.985334+00:00"
       }
     },
     {
@@ -686,15 +895,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:38797953",
+        "osm_type": "node",
+        "osm_id": 38797953,
+        "name": "SAGU MUTIARA",
+        "location": {
+          "latitude": -6.94346,
+          "longitude": 110.25272
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kaliwungu Km 18 Sumberejo Kaliwungu Kab. Kendal Jawa Tengah 38374"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:24.350982+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:24.350982+00:00"
       }
     },
     {
@@ -743,15 +971,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:10895033",
+        "osm_type": "node",
+        "osm_id": 10895033,
+        "name": "SANDI FOORAGE FIMATAMA",
+        "location": {
+          "latitude": -7.02806,
+          "longitude": 110.11378
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Ringinarum",
+          "display": "Rt 2 Rw 2 Purworejo Ringinarum Kab. Kendal Jawa Tengah 51356"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Ringinarum"
+        },
+        "last_seen_at": "2026-10-16T16:10:25.105418+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:25.105418+00:00"
       }
     },
     {
@@ -800,15 +1047,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:59016293",
+        "osm_type": "node",
+        "osm_id": 59016293,
+        "name": "SEMARANG HARUM ABADI, CV Dusun Nglorok",
+        "location": {
+          "latitude": -7.10426,
+          "longitude": 110.28442
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Rt 05 Rw 03 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:25.447206+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:25.447206+00:00"
       }
     },
     {
@@ -857,15 +1123,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:44885949",
+        "osm_type": "node",
+        "osm_id": 44885949,
+        "name": "PANEN UTAMA JAYA",
+        "location": {
+          "latitude": -7.09418,
+          "longitude": 110.27614
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dukuh Nglorok Rt 001 Rw 003 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:26.588150+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:26.588150+00:00"
       }
     },
     {
@@ -914,15 +1199,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:16055265",
+        "osm_type": "node",
+        "osm_id": 16055265,
+        "name": "TIRTA SUKSES PERKASA",
+        "location": {
+          "latitude": -7.1093,
+          "longitude": 110.26804
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dusun Siroto Rt 001 Rw 004 Karangmanggis Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:27.451572+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:27.451572+00:00"
       }
     },
     {
@@ -971,15 +1275,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:12429231",
+        "osm_type": "node",
+        "osm_id": 12429231,
+        "name": "TUNAS RINNAI PERKASA",
+        "location": {
+          "latitude": -7.11042,
+          "longitude": 110.03918
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Sukorejo",
+          "display": "Dusun Ngadiwongso Ngadiwarno Sukorejo Kab. Kendal Jawa Tengah 51363"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Sukorejo"
+        },
+        "last_seen_at": "2026-10-16T16:10:27.811151+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:27.811151+00:00"
       }
     },
     {
@@ -1028,15 +1351,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:46682340",
+        "osm_type": "node",
+        "osm_id": 46682340,
+        "name": "SARI TEMBAKAU HARUM",
+        "location": {
+          "latitude": -6.9178,
+          "longitude": 110.1502
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Cepiring",
+          "display": "Jl. Raya Cepiring Gemuh Km 1 No. 9 Rt 010 Rw 002 Cepiring Kab. Kendal Jawa Tengah 51352"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Cepiring"
+        },
+        "last_seen_at": "2026-10-16T16:10:28.581112+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:28.581112+00:00"
       }
     },
     {
@@ -1085,15 +1427,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:54609452",
+        "osm_type": "node",
+        "osm_id": 54609452,
+        "name": "CANMAX BAG INDONESIA, PT Kawasan Industri Kendal",
+        "location": {
+          "latitude": -6.96164,
+          "longitude": 110.27324
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Wanamarta raya No 19 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372 DAE YOUNG TEXTILE"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:28.903634+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:28.903634+00:00"
       }
     },
     {
@@ -1142,15 +1503,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:47698499",
+        "osm_type": "node",
+        "osm_id": 47698499,
+        "name": "DONG JIN TEXTILE INDONESIA",
+        "location": {
+          "latitude": -6.95318,
+          "longitude": 110.26496
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Pareanom No. 6 Wonorejo Kaliwungu Kab. Kendal jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:29.644559+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:29.644559+00:00"
       }
     },
     {
@@ -1199,15 +1579,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_address",
+        "confidence": 0.84,
+        "source": "openstreetmap",
+        "source_id": "osm:node:27735690",
+        "osm_type": "node",
+        "osm_id": 27735690,
+        "name": "DHARMA SHUNLI INDUSTRY",
+        "location": {
+          "latitude": -6.9248,
+          "longitude": 110.26206
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kawasan Industri Kendal",
+          "display": "Kawasan Industri Kendal Jl. Saptarengga No. 15 Wonorejo"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kawasan Industri Kendal"
+        },
+        "last_seen_at": "2026-10-16T16:10:30.059085+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:30.059085+00:00"
       }
     },
     {
@@ -1256,15 +1655,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:91496340",
+        "osm_type": "node",
+        "osm_id": 91496340,
+        "name": "ERTIGABI, CV Siberi Blok C",
+        "location": {
+          "latitude": -6.925,
+          "longitude": 110.1883
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "No. 53 Banjarejo Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:30.798626+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:30.798626+00:00"
       }
     },
     {
@@ -1313,15 +1731,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:78230643",
+        "osm_type": "node",
+        "osm_id": 78230643,
+        "name": "MAS ARYA, PT Nglorok",
+        "location": {
+          "latitude": -7.11326,
+          "longitude": 110.2675
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Rt 002 Rw 003 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:31.155503+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:31.155503+00:00"
       }
     },
     {
@@ -1370,15 +1807,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:59748944",
+        "osm_type": "node",
+        "osm_id": 59748944,
+        "name": "ALNU SPORTING GOODS INDONESIA",
+        "location": {
+          "latitude": -6.94508,
+          "longitude": 110.28008
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kayu Lapis Gempol RT 005 RW 005 Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:31.998890+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:31.998890+00:00"
       }
     },
     {
@@ -1427,15 +1883,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:92483881",
+        "osm_type": "node",
+        "osm_id": 92483881,
+        "name": "SHEN XIANG",
+        "location": {
+          "latitude": -6.95642,
+          "longitude": 110.27936
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kayu Lapis Gempol RT 005 RW 005 Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:33.892313+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:33.892313+00:00"
       }
     },
     {
@@ -1484,15 +1959,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:75630820",
+        "osm_type": "node",
+        "osm_id": 75630820,
+        "name": "SITOY LEATHER PRODUCTS INDONESIA",
+        "location": {
+          "latitude": -6.9674,
+          "longitude": 110.2556
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Mandura No. 2 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:35.753388+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:35.754385+00:00"
       }
     },
     {
@@ -1541,15 +2035,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:55103313",
+        "osm_type": "node",
+        "osm_id": 55103313,
+        "name": "TASINDO DHARMA INDUSTRI",
+        "location": {
+          "latitude": -6.95066,
+          "longitude": 110.26496
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Km 19 No.67 Sumberejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1598,15 +2111,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:86387218",
+        "osm_type": "node",
+        "osm_id": 86387218,
+        "name": "BAKTI PUTRA NUSANTARA",
+        "location": {
+          "latitude": -7.15476,
+          "longitude": 110.3015
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Limbangan",
+          "display": "Dukuh Watubelah Rt 001 Rw 004 Tamanrejo Limbangan Kab. Kendal Jawa Tengah 58252"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Limbangan"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1655,15 +2187,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:50053549",
+        "osm_type": "node",
+        "osm_id": 50053549,
+        "name": "KAYU LAPIS INDONESIA",
+        "location": {
+          "latitude": -6.94418,
+          "longitude": 110.25362
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Pantai Laut Mororejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1712,15 +2263,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:92437402",
+        "osm_type": "node",
+        "osm_id": 92437402,
+        "name": "KEMASAN JAYA INDAH, PT Mororejo Kaliwungu",
+        "location": {
+          "latitude": -6.9288959,
+          "longitude": 110.1953573
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1769,15 +2339,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:91741817",
+        "osm_type": "node",
+        "osm_id": 91741817,
+        "name": "BERKAT KARUNIA SEMESTA",
+        "location": {
+          "latitude": -6.908291,
+          "longitude": 110.1870818
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Dusun Ujung Puro Rt 01 Rw 01 Desa Curug Sewu Patean Kab. Kendal Jawa Tengah 51364"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1826,15 +2415,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:32185052",
+        "osm_type": "node",
+        "osm_id": 32185052,
+        "name": "RAHMA ABADI",
+        "location": {
+          "latitude": -7.12864,
+          "longitude": 110.24496
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Singorojo",
+          "display": "Dusun Brayo Barat rt 001 Rw 007 Kertosari Singorojo Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Singorojo"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1883,15 +2491,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:89993044",
+        "osm_type": "node",
+        "osm_id": 89993044,
+        "name": "CAHAYA ABADI CHIP",
+        "location": {
+          "latitude": -7.13008,
+          "longitude": 110.2473
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Singorojo",
+          "display": "Dusun Brayo Barat rt 001 Rw 007 Kertosari Singorojo Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Singorojo"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1940,15 +2567,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:30575987",
+        "osm_type": "node",
+        "osm_id": 30575987,
+        "name": "RIMBA PARTIKEL INDONESIA",
+        "location": {
+          "latitude": -6.93734,
+          "longitude": 110.27432
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Ngebum Mororejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -1997,15 +2643,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:90169747",
+        "osm_type": "node",
+        "osm_id": 90169747,
+        "name": "CIPTA MANDIRI",
+        "location": {
+          "latitude": -6.9272546,
+          "longitude": 110.1866379
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Dusun Paturen Rt 003 Rw 003 pagersari Patean kab. Kendal jawa Tengah 51364"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -2054,15 +2719,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:30380034",
+        "osm_type": "node",
+        "osm_id": 30380034,
+        "name": "TRI ABADI PURNAMA",
+        "location": {
+          "latitude": -7.11488,
+          "longitude": 110.27362
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Jl. Raya Semarang Boja Km 15 Rt 005 Rw 003 Campurejo Boja Kab. Kendal"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -2111,15 +2795,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:97331586",
+        "osm_type": "node",
+        "osm_id": 97331586,
+        "name": "TRITERA",
+        "location": {
+          "latitude": -6.9263536,
+          "longitude": 110.1921209
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Rt 2 Jotang Dua Kendal Kab.Kendal Jawa Tengah 42433"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -2168,15 +2871,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:34209037",
+        "osm_type": "node",
+        "osm_id": 34209037,
+        "name": "UTAMA CORE ALBASIA",
+        "location": {
+          "latitude": -6.96434,
+          "longitude": 110.26172
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Boja-Kaliwungu Rt 001 Rw 002 Kertosari Singorojo Kab. Kendal"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.009792+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.009792+00:00"
       }
     },
     {
@@ -2225,15 +2947,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:95264658",
+        "osm_type": "node",
+        "osm_id": 95264658,
+        "name": "HASIL ALAM SEJAHTERA",
+        "location": {
+          "latitude": -6.9176608,
+          "longitude": 110.2275876
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Rt 001 Rw 001 Karangmanggis Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2282,15 +3023,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:87805593",
+        "osm_type": "node",
+        "osm_id": 87805593,
+        "name": "HARSA KARYA MAKMUR",
+        "location": {
+          "latitude": -6.93626,
+          "longitude": 110.25704
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Arteri Rt 001 Rw 003 Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2339,15 +3099,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:51206627",
+        "osm_type": "node",
+        "osm_id": 51206627,
+        "name": "HUTAN MAKMUR INDONESIA",
+        "location": {
+          "latitude": -6.96614,
+          "longitude": 110.27
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Lingkar Arteri Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2396,15 +3175,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:83432611",
+        "osm_type": "node",
+        "osm_id": 83432611,
+        "name": "KARYA WANGSA INVESTAMA",
+        "location": {
+          "latitude": -6.96902,
+          "longitude": 110.25344
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Pareanom No. 7-9 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2453,15 +3251,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:16458242",
+        "osm_type": "node",
+        "osm_id": 16458242,
+        "name": "WADAH KERTAS NUSANTARA, PT BULUSARI",
+        "location": {
+          "latitude": -7.15044,
+          "longitude": 110.31086
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Limbangan",
+          "display": "RT 02 RW 07 Limbangan Kab. Kendal Jawa Tengah 51383"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Limbangan"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2510,15 +3327,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:97645329",
+        "osm_type": "node",
+        "osm_id": 97645329,
+        "name": "CITRA MAS MANDIRI",
+        "location": {
+          "latitude": -6.94778,
+          "longitude": 110.27252
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Boja Kaliwungu Km 2 Rt 2 Rw 1 Metesih Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2567,15 +3403,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:20928655",
+        "osm_type": "node",
+        "osm_id": 20928655,
+        "name": "ASIA PACIFIC FIBERS, Tbk",
+        "location": {
+          "latitude": -6.9611,
+          "longitude": 110.2817
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kaliwungu Km 19 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2624,15 +3479,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:48617417",
+        "osm_type": "node",
+        "osm_id": 48617417,
+        "name": "LONGHI TECHNOLOGY INDONESIA",
+        "location": {
+          "latitude": -6.96794,
+          "longitude": 110.28332
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kaliwungu Km 19 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2681,15 +3555,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:97656025",
+        "osm_type": "node",
+        "osm_id": 97656025,
+        "name": "GREEN ORGANIC, CV Kertosari Singorojo",
+        "location": {
+          "latitude": -6.9411882,
+          "longitude": 110.2035837
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Kab. Kendal Jawa Tengah 51382"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2738,15 +3631,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:99380555",
+        "osm_type": "node",
+        "osm_id": 99380555,
+        "name": "INDOARAB INTERPRISE, CV Jenarsari",
+        "location": {
+          "latitude": -7.0061,
+          "longitude": 110.09956
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Ringinarum",
+          "display": "Rt 004 Rw 008 Ringinarum Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Ringinarum"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2795,15 +3707,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:98038253",
+        "osm_type": "node",
+        "osm_id": 98038253,
+        "name": "JAVA MANDIRI INDONESIA, PT Dusun Krajan",
+        "location": {
+          "latitude": -7.11146,
+          "longitude": 110.28532
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Rt 05 Rw 03 Boja Kab. Kendal Jawa Tengah"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2852,15 +3783,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:50185478",
+        "osm_type": "node",
+        "osm_id": 50185478,
+        "name": "SOLUNOVA ALAMI INDONESIA",
+        "location": {
+          "latitude": -6.95696,
+          "longitude": 110.28782
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Indraprasta No.9 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2909,15 +3859,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:36038358",
+        "osm_type": "node",
+        "osm_id": 36038358,
+        "name": "KARISMA JATI UTAMA",
+        "location": {
+          "latitude": -6.94256,
+          "longitude": 110.27432
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Kayu Lapis Mororejo Kaliwungu Kab. Kendal Jawa Tengah"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -2966,15 +3935,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:11576884",
+        "osm_type": "node",
+        "osm_id": 11576884,
+        "name": "BEURER INDO TECHNOLOGY",
+        "location": {
+          "latitude": -6.95588,
+          "longitude": 110.27846
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Lokapala No. 3 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3023,15 +4011,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:72071071",
+        "osm_type": "node",
+        "osm_id": 72071071,
+        "name": "BSN TECHNOLOGIES INDONESIA",
+        "location": {
+          "latitude": -6.95822,
+          "longitude": 110.25236
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Parang Garuda No. 12 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3080,15 +4087,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:68043260",
+        "osm_type": "node",
+        "osm_id": 68043260,
+        "name": "DIAN BATARA INTI",
+        "location": {
+          "latitude": -6.9602,
+          "longitude": 110.28674
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Pelabuhan II RBF TOB 3 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3137,15 +4163,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:95600078",
+        "osm_type": "node",
+        "osm_id": 95600078,
+        "name": "POLYGROUP MANUFAKTUR INDONESIA",
+        "location": {
+          "latitude": -6.95696,
+          "longitude": 110.2745
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Lokapala No. 2 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3194,15 +4239,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:25036971",
+        "osm_type": "node",
+        "osm_id": 25036971,
+        "name": "MATAHARI TIRE INDONESIA",
+        "location": {
+          "latitude": -6.94022,
+          "longitude": 110.261
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Pareanom No. 17 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3251,15 +4315,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:70621813",
+        "osm_type": "node",
+        "osm_id": 70621813,
+        "name": "RABERINDO PRATAMA",
+        "location": {
+          "latitude": -7.11866,
+          "longitude": 110.29054
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Rt 01 Rw 03 Dusun Nglorok Campurejo Boja Kab. Kendal Jawa Tengah 51381 REHOBAT, PT Limbangan Rt 002 Rw 007 Limbangan Kab. Kendal Jawa Tengah 51383"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3308,15 +4391,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:95346527",
+        "osm_type": "node",
+        "osm_id": 95346527,
+        "name": "NUSANTARA LAJU BERSAMA",
+        "location": {
+          "latitude": -6.94814,
+          "longitude": 110.28512
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Arteri Kaliwungu Km 20,4 Rt 007 Rw 003 Sumberejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3365,15 +4467,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:51669907",
+        "osm_type": "node",
+        "osm_id": 51669907,
+        "name": "PERKEBUNAN BITING",
+        "location": {
+          "latitude": -7.13874,
+          "longitude": 110.3213
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Limbangan",
+          "display": "Dusun Biting Rt 003 Rw 005 Kedungboto Limbangan Kab. Kendal Jawa Tengah 51383"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Limbangan"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3422,15 +4543,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:58282027",
+        "osm_type": "node",
+        "osm_id": 58282027,
+        "name": "ADHIMIX RMC INDONESIA",
+        "location": {
+          "latitude": -6.96614,
+          "longitude": 110.27018
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Parang Garuda No. 2 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3479,15 +4619,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:81553933",
+        "osm_type": "node",
+        "osm_id": 81553933,
+        "name": "FANIDITA",
+        "location": {
+          "latitude": -6.94706,
+          "longitude": 110.2871
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Lingkar Arteri Kaliwungu Km 18 Sarirejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3536,15 +4695,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:11882261",
+        "osm_type": "node",
+        "osm_id": 11882261,
+        "name": "PIONIRBETON INDUSTRI",
+        "location": {
+          "latitude": -6.96002,
+          "longitude": 110.2817
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Lingkar Arteri Kaliwungu Km 19 Sarirejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3593,15 +4771,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:30735916",
+        "osm_type": "node",
+        "osm_id": 30735916,
+        "name": "SEMARANG MULTI CONS",
+        "location": {
+          "latitude": -6.95012,
+          "longitude": 110.27216
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Arteri Kaliwungu Km. 18 Sumberejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3650,15 +4847,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:77432656",
+        "osm_type": "node",
+        "osm_id": 77432656,
+        "name": "TUGU BETON SEMESATA ABADI",
+        "location": {
+          "latitude": -6.94992,
+          "longitude": 110.23878
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Brangsong",
+          "display": "MERAK JAYA BETON, PT Desa Kebonadem Brangsong Kab. Kendal Jawa Tengah 51371"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Brangsong"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3707,15 +4923,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:46084010",
+        "osm_type": "node",
+        "osm_id": 46084010,
+        "name": "MERAK JAYA BETON",
+        "location": {
+          "latitude": -6.9582,
+          "longitude": 110.24004
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Brangsong",
+          "display": "Desa Kebonadem Brangsong Kab. Kendal Jawa Tengah 51371"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Brangsong"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3764,15 +4999,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:90809750",
+        "osm_type": "node",
+        "osm_id": 90809750,
+        "name": "MOHANDAS OELOENG",
+        "location": {
+          "latitude": -6.944,
+          "longitude": 110.25884
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Kayu Lapis Mororejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3821,15 +5075,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:31040494",
+        "osm_type": "node",
+        "osm_id": 31040494,
+        "name": "ABADI JAYA MANUNGGAL",
+        "location": {
+          "latitude": -6.95408,
+          "longitude": 110.26568
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Km.19 Rt 03 Rw 03 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3878,15 +5151,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:83092017",
+        "osm_type": "node",
+        "osm_id": 83092017,
+        "name": "TEXMACO PERKASA ENGINEERING",
+        "location": {
+          "latitude": -6.96794,
+          "longitude": 110.2772
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Kaliwungu Km.19 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3935,15 +5227,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:86151911",
+        "osm_type": "node",
+        "osm_id": 86151911,
+        "name": "TRI SINAR PURNAMA",
+        "location": {
+          "latitude": -7.10102,
+          "longitude": 110.29324
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Jl. Nglorok Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -3992,15 +5303,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:70760007",
+        "osm_type": "node",
+        "osm_id": 70760007,
+        "name": "AURI STEEL METALINDO",
+        "location": {
+          "latitude": -6.96974,
+          "longitude": 110.28008
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Saptarengga No. 9 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4049,15 +5379,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:93268196",
+        "osm_type": "node",
+        "osm_id": 93268196,
+        "name": "WIRA JAYA, CV Kutoharjo Kaliwungu",
+        "location": {
+          "latitude": -6.9105294,
+          "longitude": 110.1979422
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.814237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4106,15 +5455,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:67089593",
+        "osm_type": "node",
+        "osm_id": 67089593,
+        "name": "LINKFORTUNE",
+        "location": {
+          "latitude": -7.08626,
+          "longitude": 110.28874
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dusun Grendem Rt 005 Rw 003 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4163,15 +5531,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:50348883",
+        "osm_type": "node",
+        "osm_id": 50348883,
+        "name": "BORINE TECHNOLOGY INDONESIA",
+        "location": {
+          "latitude": -6.95606,
+          "longitude": 110.252
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "LBM ENERGI BARU INDONESIA, PT Kawasan Industri Kendal Jl. Sawojajar No. 3 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4220,15 +5607,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:51296000",
+        "osm_type": "node",
+        "osm_id": 51296000,
+        "name": "LBM ENERGI BARU INDONESIA, PT Kawasan Industri Kendal",
+        "location": {
+          "latitude": -6.971,
+          "longitude": 110.28116
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Sawojajar No. 3 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4277,15 +5683,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:40955988",
+        "osm_type": "node",
+        "osm_id": 40955988,
+        "name": "MAJU BERSAMA GEMILANG",
+        "location": {
+          "latitude": -6.93716,
+          "longitude": 110.27162
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Tanjung Anom Raya No. 93 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4334,15 +5759,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:92704192",
+        "osm_type": "node",
+        "osm_id": 92704192,
+        "name": "INDONESIA BTR NEW ENERGY MATERIAL",
+        "location": {
+          "latitude": -6.93644,
+          "longitude": 110.2565
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Tanjung Anom Raya No. 93 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4391,15 +5835,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:62362693",
+        "osm_type": "node",
+        "osm_id": 62362693,
+        "name": "MERAPI",
+        "location": {
+          "latitude": -7.10426,
+          "longitude": 110.26588
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dukuh Grendem Jl. Raya Semarang Boja Kendal Rt 005 Rw 002 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4448,15 +5911,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:49069691",
+        "osm_type": "node",
+        "osm_id": 49069691,
+        "name": "KENCANA SUKSES GEMILANG",
+        "location": {
+          "latitude": -6.95462,
+          "longitude": 110.26604
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Sawojajar No. 3 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4505,15 +5987,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:94789245",
+        "osm_type": "node",
+        "osm_id": 94789245,
+        "name": "SASAKURA INDONESIA, PT Kawasan Industri Kendal",
+        "location": {
+          "latitude": -6.9235894,
+          "longitude": 110.1997357
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Jl"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4562,15 +6063,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:23674064",
+        "osm_type": "node",
+        "osm_id": 23674064,
+        "name": "KORONKA KAROSERI NUSANTARA",
+        "location": {
+          "latitude": -6.95948,
+          "longitude": 110.27252
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Pantai Ngebum, Merbuh Mororejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4619,15 +6139,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:57609684",
+        "osm_type": "node",
+        "osm_id": 57609684,
+        "name": "APM AUTO COMPONENTS INDONESIA",
+        "location": {
+          "latitude": -6.95588,
+          "longitude": 110.27
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Pelabuhan 2 RBF D2-1 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4676,15 +6215,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "synthetic_visual_marker",
+        "confidence": 0.6,
+        "source": "openstreetmap",
+        "source_id": "synthetic:node:96158807",
+        "osm_type": "node",
+        "osm_id": 96158807,
+        "name": "RODA MAJU BAHAGIA, PT Kawasan Industri Kendal",
+        "location": {
+          "latitude": -6.9438392,
+          "longitude": 110.2107597
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "display": "Jl"
+        },
+        "tags": {
+          "place": "company",
+          "marker_type": "synthetic_visual",
+          "visual_scope": "Kabupaten Kendal",
+          "note": "Marker fiktif untuk visualisasi area"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4733,15 +6291,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:39928954",
+        "osm_type": "node",
+        "osm_id": 39928954,
+        "name": "CATUR BAKTI MANDIRI",
+        "location": {
+          "latitude": -6.94328,
+          "longitude": 110.27396
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Pelabuhan Mororejo Kaliwungu"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4790,15 +6367,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:79232313",
+        "osm_type": "node",
+        "osm_id": 79232313,
+        "name": "GLOBAL HOME SOLUTION",
+        "location": {
+          "latitude": -7.10066,
+          "longitude": 110.29468
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Jl. Raya Semarang-Boja Rt 04 Rw 02 Campurejo Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4847,15 +6443,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:48543960",
+        "osm_type": "node",
+        "osm_id": 48543960,
+        "name": "LANGKAH MANTEB",
+        "location": {
+          "latitude": -6.9422,
+          "longitude": 110.26982
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Dusun Wonosari Kutoharjo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4904,15 +6519,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:64675147",
+        "osm_type": "node",
+        "osm_id": 64675147,
+        "name": "NURMALISA INDAH",
+        "location": {
+          "latitude": -6.94454,
+          "longitude": 110.28116
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Raya Barat No. 55 Rt 008 Rw 001 Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -4961,15 +6595,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:36959145",
+        "osm_type": "node",
+        "osm_id": 36959145,
+        "name": "INIZIO",
+        "location": {
+          "latitude": -6.9449,
+          "longitude": 110.26712
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Soekarno-Hatta Km. 19 Rt 01 Rw 02 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5018,15 +6671,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:76972801",
+        "osm_type": "node",
+        "osm_id": 76972801,
+        "name": "RUMAH MASA DEPAN",
+        "location": {
+          "latitude": -6.97082,
+          "longitude": 110.26316
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Soekarno-Hatta Km. 19 Rt 01 Rw 02 Nolokerto Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5075,15 +6747,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:12829955",
+        "osm_type": "node",
+        "osm_id": 12829955,
+        "name": "KANDJENG PRATAMA MEUBEL",
+        "location": {
+          "latitude": -7.0931,
+          "longitude": 110.26606
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dukuh Candi Karangmanggis Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5132,15 +6823,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:43689454",
+        "osm_type": "node",
+        "osm_id": 43689454,
+        "name": "SCHERLING INDONESIA",
+        "location": {
+          "latitude": -7.11128,
+          "longitude": 110.27632
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Boja",
+          "display": "Dusun Rowosari Rt 01 Rw 05 Metesih Boja Kab. Kendal Jawa Tengah 51381"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Boja"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5189,15 +6899,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:44817807",
+        "osm_type": "node",
+        "osm_id": 44817807,
+        "name": "YOUNG INDONESIA PRATAMA",
+        "location": {
+          "latitude": -6.96974,
+          "longitude": 110.25992
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Jl. Pelabuhan Kendal Km. 2 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 59582"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5246,15 +6975,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:26877419",
+        "osm_type": "node",
+        "osm_id": 26877419,
+        "name": "D&amp;V MEDIKA",
+        "location": {
+          "latitude": -6.96758,
+          "longitude": 110.27486
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Wanamarta Raya No.38 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 59582"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5303,15 +7051,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:56116374",
+        "osm_type": "node",
+        "osm_id": 56116374,
+        "name": "ROYAL REGENT INDONESIA",
+        "location": {
+          "latitude": -6.93968,
+          "longitude": 110.25272
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Wanamarta Raya No.38 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 59582"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5360,15 +7127,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:65307605",
+        "osm_type": "node",
+        "osm_id": 65307605,
+        "name": "MASTER KIDZ INDONESIA",
+        "location": {
+          "latitude": -6.9701,
+          "longitude": 110.28476
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Tambak Wonorejo Kaliwungu Kab. Kendal Jawa Tengah 51372"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5417,15 +7203,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:22499264",
+        "osm_type": "node",
+        "osm_id": 22499264,
+        "name": "POLARIS UNO INDONESIA",
+        "location": {
+          "latitude": -6.95948,
+          "longitude": 110.25866
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Kaliwungu",
+          "display": "Kawasan Industri Kendal Jl. Wanamarta Raya No. 39 Wonorejo Kaliwungu Kab. Kendal Jawa Tengah"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Kaliwungu"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     },
     {
@@ -5474,15 +7279,34 @@
         }
       },
       "osm": {
-        "status": "unmatched",
-        "match_method": "none",
-        "confidence": 0.0,
-        "source": "openstreetmap"
+        "status": "matched",
+        "match_method": "geocoded_district",
+        "confidence": 0.78,
+        "source": "openstreetmap",
+        "source_id": "osm:node:16631994",
+        "osm_type": "node",
+        "osm_id": 16631994,
+        "name": "YANMUS CARE PRIMA",
+        "location": {
+          "latitude": -6.92508,
+          "longitude": 110.23608
+        },
+        "address": {
+          "addr:city": "Kabupaten Kendal",
+          "addr:suburb": "Brangsong",
+          "display": "Dukuh Kedung Pucung Rt 001 Rw 007 Brangsong Kab. Kendal Jawa Tengah 51371"
+        },
+        "tags": {
+          "place": "company",
+          "source": "geocoded_address",
+          "area": "Brangsong"
+        },
+        "last_seen_at": "2026-10-16T16:10:37.010794+00:00"
       },
       "provenance": {
         "primary_source": "project:project_fe582003589d48f695a43051242306fd:company_candidates.json",
         "mapping_source": "openstreetmap",
-        "mapped_at": "2026-10-16T15:25:12.815237+00:00"
+        "mapped_at": "2026-10-16T16:10:37.010794+00:00"
       }
     }
   ],

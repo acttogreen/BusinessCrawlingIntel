@@ -16,6 +16,23 @@
       "status": "active",
       "created_at": "2026-10-16T13:11:46.863055+00:00",
       "updated_at": "2026-10-16T15:19:59.829680+00:00"
+    },
+    {
+      "id": "project_dbce714b31de47a6ad35a8db798a3ab4",
+      "province_code": "33",
+      "province_name": "Jawa Tengah",
+      "regency_code": "33.72",
+      "regency_name": "Kota Surakarta",
+      "region_name": "Kota Surakarta",
+      "region_type": "kota",
+      "source_year": 2026,
+      "source_category": null,
+      "description": null,
+      "notes": null,
+      "pdf_extractor": "pymupdf",
+      "status": "active",
+      "created_at": "2026-10-16T16:11:35.622622+00:00",
+      "updated_at": "2026-10-16T16:12:16.232967+00:00"
     }
   ],
   "documents": [
@@ -47,6 +64,34 @@
         "elements": 0,
         "characters": 0
       }
+    },
+    {
+      "id": "document_a7a262fbe5c94daa8dc1fda588a8c8c1",
+      "project_id": "project_dbce714b31de47a6ad35a8db798a3ab4",
+      "province_name": "Jawa Tengah",
+      "region_name": "Kota Surakarta",
+      "original_filename": "Manufaktur Sedang dan Besar.pdf",
+      "sha256": "56c2c6578187d6b9df1efe2fdde073af80e4ae8901052cea044f6be0b9f0bf56",
+      "status": "completed",
+      "uploaded_at": "2026-10-16T16:11:52.775679+00:00",
+      "started_at": "2026-10-16T16:12:19.638211+00:00",
+      "completed_at": "2026-10-16T16:12:25.221834+00:00",
+      "parser": "opendataloader",
+      "json_artifact": "original.json",
+      "markdown_artifact": "original.md",
+      "processing_log": "processing.log",
+      "warnings": [],
+      "error": null,
+      "raw_companies_artifact": "company_candidates_raw.json",
+      "companies_artifact": "company_candidates.json",
+      "companies_csv_artifact": "company_candidates.csv",
+      "companies_count": 39,
+      "extraction": {
+        "companies": 42,
+        "elements": 1298,
+        "characters": 57567
+      },
+      "curation_artifact": null
     }
   ]
 }
