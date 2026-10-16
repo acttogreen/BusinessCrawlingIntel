@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "tasks": [
+    {
+      "id": "9fba6355-e8c7-485c-82d1-a28f143d7042",
+      "title": "Selesaikan integrasi Kurasi AI",
+      "done": false,
+      "createdAt": 1792122995413,
+      "updatedAt": 1792123020127,
+      "order": 1
+    },
+    {
+      "id": "43bc20f1-639b-4fdd-8943-b307327e668d",
+      "title": "Buat skrip python untuk konversi json ke json OSM Mappable",
+      "done": false,
+      "createdAt": 1792123043412,
+      "updatedAt": 1792123043412,
+      "order": 2
+    },
+    {
+      "id": "0787a433-eb28-4739-a531-1b6e23ba64e7",
+      "title": "buat pilihan region di main.tsx lalu load database json osm berdasarkan isian folder",
+      "done": false,
+      "createdAt": 1792127880306,
+      "updatedAt": 1792127880306,
+      "order": 3
+    }
+  ]
+}

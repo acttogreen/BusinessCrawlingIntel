@@ -2,6 +2,8 @@
 import io
 import json
 import zipfile
+import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -20,6 +22,38 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.storage import read_activities, read_businesses, read_metadata
+from backend.mapping import build_mapping_for_sources, validate_mapping_payload
+
+
+def atomic_json_write(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporary.replace(path)
+
+
+def _region_slug(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "_", normalized).strip("_")
+
+
+def region_mapping_path(project: dict[str, Any]) -> Path:
+    # Region datasets live under backend/data and are keyed by validated names,
+    # not by user-supplied dropdown labels or project IDs. Existing datasets may
+    # omit the administrative prefix (e.g. kota_surakarta -> surakarta).
+    data_root = Path(__file__).parent / "data"
+    province_name, region_name = project["province_name"], project["region_name"]
+    province_dir = data_root / _region_slug(province_name)
+    region_slug = _region_slug(region_name)
+    candidates = [region_slug]
+    for prefix in ("kabupaten_", "kota_"):
+        if region_slug.startswith(prefix):
+            candidates.append(region_slug[len(prefix):])
+    for candidate in candidates:
+        path = province_dir / candidate / "business_database_mapping.json"
+        if path.exists():
+            return path
+    return province_dir / region_slug / "business_database_mapping.json"
 from backend.preferences import preferences_status, read_preferences, write_preferences
 from backend.ai_curation import curation_status, load_and_curate, preference_error
 
@@ -371,6 +405,25 @@ def administrative_sync() -> dict[str, Any]:
     except Exception as exc:
         raise HTTPException(502, f"Sinkronisasi wilayah gagal: {exc}") from exc
 
+@app.get("/api/data/regions")
+def available_data_regions() -> dict[str, Any]:
+    """List only regional folders that contain a usable mapping JSON file."""
+    data_root = Path(__file__).parent / "data"
+    items: list[dict[str, Any]] = []
+    for province_dir in sorted(data_root.iterdir()):
+        if not province_dir.is_dir() or province_dir.name == "extracted_artifacts":
+            continue
+        province_item = next((item for item in PROVINCES if _region_slug(item.name) == province_dir.name), None)
+        for region_dir in sorted(province_dir.iterdir()):
+            mapping_path = region_dir / "business_database_mapping.json"
+            if not region_dir.is_dir() or not mapping_path.is_file():
+                continue
+            region_item = next((item for item in REGIONS if item.province_id == (province_item.id if province_item else "") and _region_slug(item.name) in {region_dir.name, f"kota_{region_dir.name}", f"kabupaten_{region_dir.name}"}), None)
+            if not province_item or not region_item:
+                continue
+            items.append({"province_code": province_item.id, "province_name": province_item.name, "province_slug": province_dir.name, "region_code": region_item.id, "region_name": region_item.name, "region_slug": region_dir.name})
+    return {"data": items}
+
 @app.get("/api/administrative/provinces")
 def administrative_provinces() -> dict[str, Any]:
     return {"data": [province_payload(item) for item in PROVINCES], "metadata": METADATA}
@@ -503,6 +556,61 @@ def ingestion_curate_project(project_id: str) -> dict[str, Any]:
     return {"status": "curated", "documents": results}
 
 
+@app.get("/api/regions/{province_code}/{region_code}/business-database-mapping")
+def region_business_database_mapping(province_code: str, region_code: str) -> dict[str, Any]:
+    project = {"province_code": province_code, "regency_code": region_code, "province_name": "", "regency_name": ""}
+    try:
+        # project_path performs the same administrative validation and name resolution as ingestion.
+        province_item, region_item = province(province_code), region(region_code)
+        if not province_item or not region_item or region_item.province_id != province_item.id:
+            raise HTTPException(404, "Region tidak valid")
+        path = region_mapping_path({**project, "province_name": province_item.name, "region_name": region_item.name})
+        if not path.is_file():
+            raise HTTPException(404, "Business database mapping for this region is not available")
+        return validate_mapping_payload(json.loads(path.read_text(encoding="utf-8")))
+    except HTTPException:
+        raise
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        raise HTTPException(422, f"Invalid regional business database mapping: {exc}") from exc
+
+
+@app.post("/api/ingestion/projects/{project_id}/process-osm")
+def ingestion_process_osm(project_id: str) -> dict[str, Any]:
+    project = get_project(project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    state = read_state()
+    documents = [d for d in state["documents"] if d["project_id"] == project_id and d.get("status") in {"completed", "completed_with_warnings"}]
+    if not documents:
+        raise HTTPException(422, "No completed PDF candidate data is available for this project")
+    candidates: list[dict[str, Any]] = []
+    for document in documents:
+        path = document_path(project, document["id"]) / (document.get("companies_artifact") or "company_candidates.json")
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(422, f"Candidate JSON for {document['id']} is missing or invalid: {exc}") from exc
+        if not isinstance(payload, list):
+            raise HTTPException(422, f"Candidate JSON for {document['id']} must be an array")
+        candidates.extend(item for item in payload if isinstance(item, dict))
+    if not candidates:
+        raise HTTPException(422, "Candidate data is empty; nothing to process")
+    osm_path = Path(__file__).parent / "data" / "businesses.json"
+    try:
+        osm_records = json.loads(osm_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(422, f"OSM source data is missing or invalid: {exc}") from exc
+    if not isinstance(osm_records, list):
+        raise HTTPException(422, "OSM source data must be an array")
+    try:
+        mapping = build_mapping_for_sources(candidates, osm_records, f"project:{project_id}:company_candidates.json", osm_path.name, region_name=project["region_name"])
+        output = region_mapping_path(project)
+        atomic_json_write(output, mapping)
+    except (OSError, ValueError, TypeError) as exc:
+        raise HTTPException(422, f"OSM processing failed: {exc}") from exc
+    return {"status": "processed", "project_id": project_id, "region": {"province": project["province_name"], "region": project["region_name"]}, "path": str(output), "summary": mapping["summary"]}
+
+
 @app.post("/api/ingestion/projects/{project_id}/process")
 def ingestion_process_project(project_id: str) -> dict[str, Any]:
     project = get_project(project_id)
@@ -609,4 +717,3 @@ def health() -> dict[str, str]:
 FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 if FRONTEND_DIST.is_dir():
     app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
-

@@ -570,3 +570,55 @@
 .theme-dark .company-evidence-btn:hover,
 .theme-dark .company-evidence-toggle:hover { background: #334155; border-color: #64748b; color: #ffffff; }
 .candidate-inline-edit { width: 100%; min-width: 80px; box-sizing: border-box; padding: 5px; border: 1px solid #3e9c7a; border-radius: 3px; background: white; }
+
+
+/* Business Intelligence header and regional selector refinement */
+.topbar > div:first-child { min-width: 0; }
+.topbar h1 { font-size: clamp(26px, 2.2vw, 34px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 750; color: #23313f; }
+.region-selector { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.region-selector select { min-width: 172px; height: 34px; padding: 0 32px 0 11px; border: 1px solid #c7c2b8; border-radius: 5px; appearance: auto; background: #fffdf9; color: #283944; box-shadow: 0 1px 2px rgba(35, 49, 63, .08); font-size: 12px; font-weight: 600; cursor: pointer; }
+.region-selector select:hover { border-color: #a45b3e; }
+.region-selector select:focus-visible { outline: 3px solid rgba(164, 91, 62, .24); outline-offset: 1px; border-color: #a45b3e; }
+.region-selector select:disabled { opacity: .62; cursor: not-allowed; background: #eeeae2; }
+.region-selector small { color: #68757a; font-size: 11px; }
+.theme-dark .topbar h1 { color: #f3f7f8; }
+.theme-dark .region-selector select { border-color: #52616a; background: #26343d; color: #edf3f4; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); color-scheme: dark; }
+.theme-dark .region-selector select:hover { border-color: #e0a084; }
+.theme-dark .region-selector select:focus-visible { outline-color: rgba(224, 160, 132, .35); border-color: #e0a084; }
+.theme-dark .region-selector select:disabled { background: #1b272f; color: #8c9ba1; }
+.theme-dark .region-selector small { color: #aab8bd; }
+@media (max-width: 760px) { .topbar h1 { font-size: 24px; } .region-selector { gap: 6px; } .region-selector select { min-width: 0; flex: 1 1 145px; } }
+
+
+
+/* Layout spacing and UX refinement */
+.topbar { min-height: 104px; height: auto; gap: 24px; padding: 14px 28px; align-items: center; }
+.topbar > div:first-child { flex: 1 1 auto; min-width: 260px; }
+.topbar h1 { margin-bottom: 12px; line-height: 1; }
+.region-selector { margin-top: 0; gap: 10px; }
+.region-selector select { min-width: 180px; height: 36px; padding-left: 12px; border-radius: 6px; }
+.top-actions { flex: 0 1 auto; justify-content: flex-end; flex-wrap: wrap; gap: 8px; max-width: 760px; }
+.top-actions button, .launcher-ai-status { min-height: 34px; }
+.summary > div { padding: 24px 20px 22px; }
+.filters, .business-list { padding: 24px 20px; }
+.section-heading { margin-bottom: 20px; }
+.filters label { margin-top: 16px; margin-bottom: 8px; }
+.filters label:first-of-type { margin-top: 0; }
+.filters select { min-height: 38px; padding: 9px 12px; border-radius: 6px; }
+.business-list { padding-top: 22px; }
+@media (max-width: 1100px) { .topbar { align-items: flex-start; } .top-actions { max-width: 520px; } }
+@media (max-width: 760px) {
+  .topbar { min-height: 0; padding: 16px; gap: 16px; flex-direction: column; align-items: stretch; }
+  .topbar > div:first-child { min-width: 0; }
+  .topbar h1 { margin-bottom: 12px; }
+  .region-selector { gap: 8px; }
+  .region-selector select { flex: 1 1 160px; min-width: 0; }
+  .top-actions { max-width: none; justify-content: flex-start; gap: 8px; }
+  .top-actions button, .launcher-ai-status { flex: 0 1 auto; }
+  .dashboard { height: auto; }
+  .summary > div { padding: 20px 16px; }
+  .filters, .business-list { padding: 20px 16px; }
+}
+@media (max-width: 420px) { .top-actions button span { display: none; } .top-actions .language-toggle, .top-actions .theme-toggle { display: inline-flex; align-items: center; justify-content: center; } }
+.theme-dark .filters select { min-height: 38px; }
+@media (min-width: 761px) { .dashboard { height: calc(100vh - 104px); } }

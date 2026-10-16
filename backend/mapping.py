@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import unicodedata
@@ -9,6 +10,34 @@ from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
+
+
+DATA_DIR = Path(__file__).parent / "data"
+
+
+def validate_mapping_payload(payload: Any) -> dict[str, Any]:
+    """Validate the stable mapping envelope before it is persisted or served."""
+    if not isinstance(payload, dict) or payload.get("schema_version") != "1.0":
+        raise ValueError("business database mapping must use schema_version 1.0")
+    businesses = payload.get("businesses")
+    if not isinstance(businesses, list):
+        raise ValueError("business database mapping businesses must be an array")
+    identifiers: set[str] = set()
+    for item in businesses:
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
+            raise ValueError("every mapped business must have a non-empty id")
+        if item["id"] in identifiers:
+            raise ValueError(f"duplicate mapped business id: {item['id']}")
+        identifiers.add(item["id"])
+    return payload
+
+
+def build_mapping_for_sources(registry: list[dict[str, Any]], osm_records: list[dict[str, Any]], registry_name: str, osm_name: str, region_name: str | None = None) -> dict[str, Any]:
+    payload = build_mapping(registry, osm_records, region_name=region_name, registry_name=registry_name)
+    payload["source_files"] = {"registry": registry_name, "osm": osm_name}
+    payload["primary_source"] = registry_name
+    payload["region"] = region_name
+    return validate_mapping_payload(payload)
 
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -66,12 +95,33 @@ def _osm_payload(record: dict[str, Any], score: float, method: str) -> dict[str,
     }
 
 
-def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: list[dict[str, Any]]) -> dict[str, Any]:
+def _stable_candidate_id(source: dict[str, Any], index: int) -> str:
+    identity = "|".join(str(source.get(key, "")).strip().lower() for key in ("company_name", "address", "city", "district"))
+    digest = hashlib.sha1(identity.encode("utf-8")).hexdigest()[:12] if identity.strip("|") else str(index)
+    return f"candidate:{digest}"
+
+
+def _regional_osm_records(records: list[dict[str, Any]], region_name: str | None) -> list[dict[str, Any]]:
+    if not region_name:
+        return records
+    expected = _normalise(region_name).replace("kabupaten ", "").replace("kota ", "")
+    scoped = []
+    for record in records:
+        address = record.get("address", {}) or {}
+        values = [address.get("addr:city"), address.get("addr:county"), address.get("addr:municipality")]
+        if any(expected and expected in _normalise(value).replace("kabupaten ", "").replace("kota ", "") for value in values):
+            scoped.append(record)
+    return scoped
+
+
+def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: list[dict[str, Any]], region_name: str | None = None, registry_name: str | None = None) -> dict[str, Any]:
     registry_records = registry if isinstance(registry, list) else registry.get("businesses", [])
+    scoped_osm = _regional_osm_records(osm_records, region_name)
     mapped: list[dict[str, Any]] = []
+    used_osm_ids: set[str] = set()
     for index, source in enumerate(registry_records, start=1):
         candidates = sorted(
-            ((_score(source, item), item) for item in osm_records),
+            ((_score(source, item), item) for item in scoped_osm if str(item.get("id")) not in used_osm_ids),
             key=lambda pair: pair[0][0],
             reverse=True,
         )
@@ -82,13 +132,15 @@ def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: 
             "confidence": round(score, 3),
             "source": "openstreetmap",
         }
+        if osm.get("status") == "matched" and osm.get("source_id"):
+            used_osm_ids.add(str(osm["source_id"]))
         mapped.append({
-            "id": f"registry:{index}",
+            "id": _stable_candidate_id(source, index),
             "name": source.get("company_name"),
             "registry": source,
             "osm": osm,
             "provenance": {
-                "primary_source": "Business_database_5.0",
+                "primary_source": registry_name or "candidate_registry",
                 "mapping_source": "openstreetmap",
                 "mapped_at": datetime.now(timezone.utc).isoformat(),
             },
@@ -96,7 +148,7 @@ def build_mapping(registry: dict[str, Any] | list[dict[str, Any]], osm_records: 
     matched = sum(item["osm"]["status"] == "matched" for item in mapped)
     return {
         "schema_version": "1.0",
-        "primary_source": "Business_database_5.0",
+        "primary_source": registry_name or "candidate_registry",
         "mapping_source": "openstreetmap",
         "source_files": {"registry": REGISTRY_PATH.name, "osm": OSM_PATH.name},
         "generated_at": datetime.now(timezone.utc).isoformat(),
