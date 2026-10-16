@@ -1,4 +1,4 @@
-# 🏢 Surakarta Business Intelligence (BusinessCrawlingIntel)
+# 🏢 Business Intelligence (BusinessCrawlingIntel)
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
